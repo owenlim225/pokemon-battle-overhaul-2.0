@@ -42,7 +42,6 @@ class Gameplay:
 
     def run(self) -> None:
         max_pick = 4
-        selected_pokemon_array = np.empty((0, 3), dtype=object)  # Initialize selected Pokémon array
 
         while True:
             try:
@@ -57,30 +56,37 @@ class Gameplay:
                     print(f"You can only pick up to {max_pick} Pokémon. Try again.")
                     continue
 
-                # Validate if the picks are within range
+                # Validate if all selected indexes are within the valid range
                 if any(pick < 0 or pick >= len(self.pokemon_array) for pick in player_picks):
                     print("One or more picks are out of range. Try again.")
                     continue
 
+                # Debug 🐞: Print selected Pokémon from the original array
                 print(f"Player 1 selected Pokémon: {[self.pokemon_array[i] for i in player_picks]}")
 
-                # Transfer selected Pokémon to the selected_pokemon_array
-                pokemon_to_transfer = self.pokemon_array[player_picks, :]
+                # Extract selected Pokémon based on player picks
+                selected_pokemon = self.pokemon_array[np.array(player_picks), :]
 
-                # Stack the transferred Pokémon into selected_pokemon_array
-                selected_pokemon_array = np.vstack((selected_pokemon_array, pokemon_to_transfer))
+                # Ensure the selected Pokémon array has the correct shape for stacking
+                if self.player1.pokemons.size == 0:
+                    self.player1.pokemons = selected_pokemon  # Directly assign if empty
+                else:
+                    self.player1.pokemons = np.vstack((self.player1.pokemons, selected_pokemon))
 
-                # Remove selected Pokémon from the original pokemon_array
+                # Remove the selected Pokémon from the original array
                 self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
+
+            
 
                 break  # Exit loop on successful selection
 
-            except ValueError:
-                print("Invalid input. Please enter valid numbers separated by spaces.")
+            except ValueError as e:
+                print(f"Invalid input. Error: {e}. Please enter valid numbers separated by spaces.")
+
 
 
 
 if __name__ == "__main__":
     _game = Gameplay()
     _game.run()
-    print("\n\n\nTite\n\n", _game.player1)
+    print("\n\n\nTite\n\n", _game.player1.pokemons)
