@@ -1,6 +1,26 @@
+import numpy as np
+from backend import Backend
+from frontend import Frontend
+
+class Player:
+    def __init__(self) -> None:
+        # Array to store Pokemon: (name, power) tuples
+        self.pokemons = np.empty((0, 2), dtype=object)
+
+        # Current Pokémon in battle, initially None
+        self.current_pokemon = None
+
+        # Array to track used Pokémon
+        self.used_pokemons = np.empty((0, 2), dtype=object)
+        
+        # Number of wins
+        self.wins = 0
+
+
+
 class Gameplay:
     def __init__(self) -> None:
-        pokemon_list = [
+        self.pokemon_array = np.array([
             ["Bulbasaur", 100, 60],
             ["Charmander", 100, 55],
             ["Eevee", 100, 52],
@@ -11,15 +31,56 @@ class Gameplay:
             ["Pikachu", 100, 50],
             ["Snorlax", 100, 80],
             ["Squirtle", 100, 58]
-        ]
+        ])
+
+        # Players 
+        self.player1 = Player()
+        self.player2 = Player()
+
+    
+
+
+    def run(self) -> None:
+        max_pick = 4
+        selected_pokemon_array = np.empty((0, 3), dtype=object)  # Initialize selected Pokémon array
+
+        while True:
+            try:
+                print("Available Pokémon:\n")
+                print(self.pokemon_array)
+
+                # Get input from player (space-separated indexes)
+                player_picks = list(map(int, input(f"Pick from 1 to {max_pick} Pokémon: ").split()))
+
+                # Validate the number of picks
+                if len(player_picks) > max_pick:
+                    print(f"You can only pick up to {max_pick} Pokémon. Try again.")
+                    continue
+
+                # Validate if the picks are within range
+                if any(pick < 0 or pick >= len(self.pokemon_array) for pick in player_picks):
+                    print("One or more picks are out of range. Try again.")
+                    continue
+
+                print(f"Player 1 selected Pokémon: {[self.pokemon_array[i] for i in player_picks]}")
+
+                # Transfer selected Pokémon to the selected_pokemon_array
+                pokemon_to_transfer = self.pokemon_array[player_picks, :]
+
+                # Stack the transferred Pokémon into selected_pokemon_array
+                selected_pokemon_array = np.vstack((selected_pokemon_array, pokemon_to_transfer))
+
+                # Remove selected Pokémon from the original pokemon_array
+                self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
+
+                break  # Exit loop on successful selection
+
+            except ValueError:
+                print("Invalid input. Please enter valid numbers separated by spaces.")
 
 
 
-
-
-
-'''
-Functions I need:
-> 1 for storing the pokemons 
-> 1 for player to access the data of the pokemons + removing the picked pokemon by player 1
-'''
+if __name__ == "__main__":
+    _game = Gameplay()
+    _game.run()
+    print("\n\n\nTite\n\n", _game.player1)
