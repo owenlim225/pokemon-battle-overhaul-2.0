@@ -38,9 +38,10 @@ class Gameplay:
         self.player2 = Player()
 
     
-
-
     def run(self) -> None:
+        pass
+
+    def pokemon_selection(self) -> None: #✅ Working
         max_pick = 4
 
         while True:
@@ -88,5 +89,5 @@ class Gameplay:
 
 if __name__ == "__main__":
     _game = Gameplay()
-    _game.run()
-    print("\n\n\nTite\n\n", _game.player1.pokemons)
+    _game.pokemon_selection()
+    
