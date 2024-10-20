@@ -39,22 +39,22 @@ class Gameplay:
 
     
     def run(self) -> None:
-        pass
+        self.pokemon_selection(_game.player1, 4)
+        self.pokemon_selection(_game.player2, len(_game.player1.pokemons))
 
-    def pokemon_selection(self) -> None: #✅ Working
-        max_pick = 4
-
+    def pokemon_selection(self, player, max_pick) -> None:
         while True:
             try:
                 print("Available Pokémon:\n")
                 print(self.pokemon_array)
 
                 # Get input from player (space-separated indexes)
+
                 player_picks = list(map(int, input(f"Pick from 1 to {max_pick} Pokémon: ").split()))
 
                 # Validate the number of picks
-                if len(player_picks) > max_pick:
-                    print(f"You can only pick up to {max_pick} Pokémon. Try again.")
+                if not (1 <= len(player_picks) <= max_pick):
+                    print(f"You must pick between 1 and {max_pick} Pokémon. Try again.")
                     continue
 
                 # Validate if all selected indexes are within the valid range
@@ -63,21 +63,22 @@ class Gameplay:
                     continue
 
                 # Debug 🐞: Print selected Pokémon from the original array
-                print(f"Player 1 selected Pokémon: {[self.pokemon_array[i] for i in player_picks]}")
+                print(f"Player selected Pokémon: {[self.pokemon_array[i] for i in player_picks]}")
 
                 # Extract selected Pokémon based on player picks
                 selected_pokemon = self.pokemon_array[np.array(player_picks), :]
 
                 # Ensure the selected Pokémon array has the correct shape for stacking
-                if self.player1.pokemons.size == 0:
-                    self.player1.pokemons = selected_pokemon  # Directly assign if empty
+                if player.pokemons.size == 0:
+                    player.pokemons = selected_pokemon  # Directly assign if empty
                 else:
-                    self.player1.pokemons = np.vstack((self.player1.pokemons, selected_pokemon))
+                    player.pokemons = np.vstack((player.pokemons, selected_pokemon))
 
                 # Remove the selected Pokémon from the original array
                 self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
 
-            
+                print("\n\n\nPlayer's selected Pokémon:\n")
+                print(player.pokemons)
 
                 break  # Exit loop on successful selection
 
@@ -87,7 +88,13 @@ class Gameplay:
 
 
 
+
 if __name__ == "__main__":
     _game = Gameplay()
-    _game.pokemon_selection()
+    _game.run()
+
+    print(f"\n\nplayer 1: {_game.player1.pokemons}\n\n")
+    print(f"\n\nplayer 2: {_game.player2.pokemons}\n\n")
+
+    print(f"Available pokemons", _game.pokemon_array)
     
