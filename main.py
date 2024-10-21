@@ -40,19 +40,19 @@ class Gameplay:
 
     #✅ Working
     def run(self) -> None: 
-        self.pokemon_selection(self.player1, 4, False)
-        self.pokemon_selection(self.player2, len(self.player1.pokemons), True)
+        self.player_pokemon_selection(self.player1, 4, False)
+        self.player_pokemon_selection(self.player2, len(self.player1.pokemons), True)
 
         print("Preparing battle...")
         time.sleep(2)
         os.system('cls')
 
-        self.battle_pokemon(self.player1)
-        self.battle_pokemon(self.player2)
+        self.choose_battle_pokemon(self.player1)
+        self.choose_battle_pokemon(self.player2)
 
 
     #✅ Working
-    def pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: 
+    def player_pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: 
         while True:
             try:
                 os.system('cls')
@@ -108,8 +108,8 @@ class Gameplay:
                 time.sleep(3)
 
 
-
-    def battle_pokemon(self, player_pokemon) -> None:
+    #✅ Working
+    def choose_battle_pokemon(self, player_pokemon) -> None:
         while True:
             try:
                 # Print the player's available Pokémon
