@@ -40,10 +40,12 @@ class Gameplay:
 
     
     def run(self) -> None: 
-        self.pokemon_selection(_game.player1, 4)
-        self.pokemon_selection(_game.player2, len(_game.player1.pokemons))
+        self.pokemon_selection(self.player1, 4, False)
+        self.pokemon_selection(self.player2, len(self.player1.pokemons), True)
 
-    def pokemon_selection(self, player, max_pick) -> None:
+
+
+    def pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: #✅ Working
         while True:
             try:
                 os.system('cls')
@@ -55,10 +57,16 @@ class Gameplay:
                 player_picks = list(map(int, input(f"Pick from 1 to {max_pick} Pokémon: ").split()))
 
                 # Validate the number of picks
-                if not (1 <= len(player_picks) <= max_pick):
+                if restricted_pick and len(player_picks) != max_pick:
+                    print(f"You must pick exactly {max_pick} Pokémon. Try again.")
+                    time.sleep(2)
+                    continue
+
+                if not restricted_pick and not (1 <= len(player_picks) <= max_pick):
                     print(f"You must pick between 1 and {max_pick} Pokémon. Try again.")
                     time.sleep(2)
                     continue
+
 
                 # Validate if all selected indexes are within the valid range
                 if any(pick < 0 or pick >= len(self.pokemon_array) for pick in player_picks):
@@ -67,7 +75,7 @@ class Gameplay:
                     continue
 
                 # Debug 🐞: Print selected Pokémon from the original array
-                print(f"Player selected Pokémon: {[str(self.pokemon_array[i, 0]) for i in player_picks]}")
+                print(f"Player selected Pokémon: {[str(self.pokemon_array[i, 0]) for i in player_picks]}") #✅ Working
 
 
                 # Extract selected Pokémon based on player picks
@@ -82,9 +90,9 @@ class Gameplay:
                 # Remove the selected Pokémon from the original array
                 self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
 
-                # print("\n\n\nPlayer:\n")
-                # print(player.pokemons)
-                # time.sleep(5)
+                print("\n\n\nPlayer:\n")
+                print(player.pokemons)
+                time.sleep(5)
 
                 break  # Exit loop on successful selection
 
