@@ -1,4 +1,4 @@
-import time, os
+import time, os, random
 import numpy as np
 from backend import Backend
 from frontend import Frontend
@@ -21,18 +21,20 @@ class Player:
 
 class Gameplay:
     def __init__(self) -> None:
+                
         self.pokemon_array = np.array([
-            ["Bulbasaur", 100, 60],
-            ["Charmander", 100, 55],
-            ["Eevee", 100, 52],
-            ["Gengar", 100, 70],
-            ["Jigglypuff", 100, 45],
-            ["Machamp", 100, 75],
-            ["Mewtwo", 100, 90],
-            ["Pikachu", 100, 50],
-            ["Snorlax", 100, 80],
-            ["Squirtle", 100, 58]
-        ])
+                # Name         Health  Power Lvl   blessing
+                ["Bulbasaur",   100,      85,        0],
+                ["Charmander",  90,       90,        0],
+                ["Eevee",       95,       80,        0],
+                ["Gengar",      85,       100,       0],
+                ["Jigglypuff",  105,      75,        0],
+                ["Machamp",     110,      105,       0],
+                ["Mewtwo",      80,       120,       0],
+                ["Pikachu",     90,       85,        0],
+                ["Snorlax",     110,      95,        0],
+                ["Squirtle",    105,      85,        0]
+        ])  
 
         # Players 
         self.player1 = Player()
@@ -43,12 +45,65 @@ class Gameplay:
         self.player_pokemon_selection(self.player1, 4, False)
         self.player_pokemon_selection(self.player2, len(self.player1.pokemons), True)
 
-        print("Preparing battle...")
+        print("\nPreparing pokemon...\n")
         time.sleep(2)
         os.system('cls')
 
         self.choose_battle_pokemon(self.player1)
         self.choose_battle_pokemon(self.player2)
+
+
+        print("\nPreparing battle...\n")
+        time.sleep(2)
+        os.system('cls')
+
+        self.potion_or_poison(self.player1)
+        self.potion_or_poison(self.player2)
+
+
+
+    #❌ Not properly tested
+    def potion_or_poison(self, player) -> None:
+        rand_effect = random.choice(["poison", "potion"])
+
+        # Check if the blessing value exists at index 3, or assign a new one
+        if player.current_pokemon.shape[0] <= 3:  # If blessing value doesn't exist
+            rand_val = random.randint(10, 15)
+            player.current_pokemon = np.append(player.current_pokemon, rand_val)  # Append blessing value
+        else:
+            rand_val = int(player.current_pokemon[3])  # Use existing blessing value
+
+        print(f"\n👼 passed by and gave your {player.current_pokemon[0]} {rand_val} blessings!!")
+        print("\n🧙 asked if you like to trade your blessings for a random effect.\n")
+
+        try:
+            user_choice = input("[Y/N]: ").strip().lower()
+            if user_choice not in ["y", "n"]:
+                raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
+
+            if user_choice == "y":
+                print("\n🧙 casted a spell...")
+
+                if rand_effect == "poison":
+                    new_power = max(0, int(player.current_pokemon[2]) - rand_val)
+                    print(f"\nYour blessing turned into poison! Your {player.current_pokemon[0]} lost power!")
+                    print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
+                    player.current_pokemon[2] = new_power
+
+                elif rand_effect == "potion":
+                    new_power = int(player.current_pokemon[2]) + rand_val
+                    print(f"\nYour blessing turned into potion! Your {player.current_pokemon[0]} gained power!")
+                    print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
+                    player.current_pokemon[2] = new_power
+
+            else:
+                print("\nYou kept your blessings untouched.")
+                player.current_pokemon[3] = rand_val  # Store the blessing value
+
+        except ValueError as e:
+            print(f"Error: {e}. Please try again.")
+
+
 
 
     #✅ Working
