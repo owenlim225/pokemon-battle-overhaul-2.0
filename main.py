@@ -38,14 +38,21 @@ class Gameplay:
         self.player1 = Player()
         self.player2 = Player()
 
-    
+    #✅ Working
     def run(self) -> None: 
         self.pokemon_selection(self.player1, 4, False)
         self.pokemon_selection(self.player2, len(self.player1.pokemons), True)
 
+        print("Preparing battle...")
+        time.sleep(2)
+        os.system('cls')
+
+        self.battle_pokemon(self.player1)
+        self.battle_pokemon(self.player2)
 
 
-    def pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: #✅ Working
+    #✅ Working
+    def pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: 
         while True:
             try:
                 os.system('cls')
@@ -74,7 +81,7 @@ class Gameplay:
                     time.sleep(2)
                     continue
 
-                # Debug 🐞: Print selected Pokémon from the original array
+                # Debug 🐞: Print selected Pokémon name from the original array
                 print(f"Player selected Pokémon: {[str(self.pokemon_array[i, 0]) for i in player_picks]}") #✅ Working
 
 
@@ -102,14 +109,52 @@ class Gameplay:
 
 
 
+    def battle_pokemon(self, player_pokemon) -> None:
+        while True:
+            try:
+                # Print the player's available Pokémon
+                print("Available Pokémon:\n", player_pokemon.pokemons)
+
+                # Ask the player to select a Pokémon for battle
+                battle_pick = int(input("Please select your battle Pokémon (index): "))
+
+                # Validate the selection
+                if battle_pick < 0 or battle_pick >= len(player_pokemon.pokemons):
+                    print("Invalid selection. Please pick one of your available Pokémon.")
+                    continue
+
+                # Extract the selected Pokémon
+                selected_pokemon = player_pokemon.pokemons[battle_pick, :]
+
+                # Assign the selected Pokémon to the player's current Pokémon
+                player_pokemon.current_pokemon = selected_pokemon
+
+                # Remove the selected Pokémon from the player's available Pokémon
+                player_pokemon.pokemons = np.delete(player_pokemon.pokemons, battle_pick, axis=0)
+
+                print(f"Current battle Pokémon: {player_pokemon.current_pokemon}")
+                break  # Exit loop on successful selection
+
+            except ValueError as e:
+                print(f"Invalid input. Error: {e}. Please enter a valid number.")
+                time.sleep(3)
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
     _game = Gameplay()
     _game.run()
 
-    print(f"\n\nplayer 1: {_game.player1.pokemons}\n\n")
-    print(f"\n\nplayer 2: {_game.player2.pokemons}\n\n")
+    print(f"\n\nplayer 1 pokemons: {_game.player1.pokemons}\n\n")
+    print(f"\n\nplayer 2 pokemons: {_game.player2.pokemons}\n\n")
+
+    print(f"\n\nplayer 1 battle pokemons: {_game.player1.current_pokemon}\n\n")
+    print(f"\n\nplayer 2 battle pokemons: {_game.player2.current_pokemon}\n\n")
 
     print(f"Available pokemons", _game.pokemon_array)
     
