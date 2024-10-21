@@ -92,7 +92,7 @@ class Gameplay:
 
                 print("\n\n\nPlayer:\n")
                 print(player.pokemons)
-                time.sleep(5)
+                time.sleep(3)
 
                 break  # Exit loop on successful selection
 
