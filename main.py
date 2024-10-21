@@ -1,3 +1,4 @@
+import time, os
 import numpy as np
 from backend import Backend
 from frontend import Frontend
@@ -38,13 +39,14 @@ class Gameplay:
         self.player2 = Player()
 
     
-    def run(self) -> None:
+    def run(self) -> None: 
         self.pokemon_selection(_game.player1, 4)
         self.pokemon_selection(_game.player2, len(_game.player1.pokemons))
 
     def pokemon_selection(self, player, max_pick) -> None:
         while True:
             try:
+                os.system('cls')
                 print("Available Pokémon:\n")
                 print(self.pokemon_array)
 
@@ -55,15 +57,18 @@ class Gameplay:
                 # Validate the number of picks
                 if not (1 <= len(player_picks) <= max_pick):
                     print(f"You must pick between 1 and {max_pick} Pokémon. Try again.")
+                    time.sleep(2)
                     continue
 
                 # Validate if all selected indexes are within the valid range
                 if any(pick < 0 or pick >= len(self.pokemon_array) for pick in player_picks):
                     print("One or more picks are out of range. Try again.")
+                    time.sleep(2)
                     continue
 
                 # Debug 🐞: Print selected Pokémon from the original array
-                print(f"Player selected Pokémon: {[self.pokemon_array[i] for i in player_picks]}")
+                print(f"Player selected Pokémon: {[str(self.pokemon_array[i, 0]) for i in player_picks]}")
+
 
                 # Extract selected Pokémon based on player picks
                 selected_pokemon = self.pokemon_array[np.array(player_picks), :]
@@ -77,13 +82,15 @@ class Gameplay:
                 # Remove the selected Pokémon from the original array
                 self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
 
-                print("\n\n\nPlayer's selected Pokémon:\n")
-                print(player.pokemons)
+                # print("\n\n\nPlayer:\n")
+                # print(player.pokemons)
+                # time.sleep(5)
 
                 break  # Exit loop on successful selection
 
             except ValueError as e:
                 print(f"Invalid input. Error: {e}. Please enter valid numbers separated by spaces.")
+                time.sleep(3)
 
 
 
