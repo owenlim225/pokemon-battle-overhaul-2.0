@@ -1,5 +1,6 @@
 import time, os, random
 import numpy as np
+import pandas as pd
 from backend import Backend
 from frontend import Frontend
 
@@ -21,8 +22,14 @@ class Player:
 
 class Gameplay:
     def __init__(self) -> None:
-        self.battle_records = []
+        self.battle_count = 0
 
+        # Initialize a battle summary DataFrame
+        self.battle_summary = pd.DataFrame(columns=[
+            "Player 1 Pokemon", "Player 1 Health", "Player 1 Power",
+            "Player 2 Pokemon", "Player 2 Health", "Player 2 Power",
+            "Winner"
+        ])
         self.pokemon_array = np.array([
                 # Name         Health  Power Lvl   blessing
                 ["Bulbasaur",   100,      85,        0],
@@ -30,7 +37,7 @@ class Gameplay:
                 ["Eevee",       95,       80,        0],
                 ["Gengar",      85,       100,       0],
                 ["Jigglypuff",  105,      75,        0],
-                ["Machamp",     110,      105,       0],
+                ["Machamp",     110,      105,       0],    
                 ["Mewtwo",      80,       120,       0],
                 ["Pikachu",     90,       85,        0],
                 ["Snorlax",     110,      95,        0],
@@ -41,11 +48,20 @@ class Gameplay:
         self.player_1 = Player()
         self.player_2 = Player()
 
-
-    def battle_summary(self, battle_records, player_1, player_2) -> None:
-        pass
-
-
+    #🟧 not yet tested
+    def add_battle(self, player1_pokemon, player2_pokemon, winner):
+        """Adds a battle entry to the summary."""
+        new_entry = {
+            "Player 1 Pokemon": player1_pokemon[0],
+            "Player 1 Health":  player1_pokemon[1],
+            "Player 1 Power":   player1_pokemon[2],
+            "Player 2 Pokemon": player2_pokemon[0],
+            "Player 2 Health":  player2_pokemon[1],
+            "Player 2 Power":   player2_pokemon[2],
+            "Winner":           winner
+        }
+        self.battle_summary = self.battle_summary.append(new_entry, ignore_index=True)
+        self.battle_count += 1  # Increment battle counter
 
 
 
@@ -120,7 +136,7 @@ class Gameplay:
                     else:
                         os.system('cls')
                         print("The game ends")
-                        self.battle_summary(self.player_1, self.battle_records, self.player_2)
+                        print(self.battle_summary)
                         time.sleep(3)
 
                         print("\n\nThank you for playing!")
@@ -287,6 +303,7 @@ class Gameplay:
             print(f"          {player_1.current_pokemon[2]} > {player_2.current_pokemon[2]}")
             print(f"\n\nPlayer 1 wins!\n\n")
             player_1.wins += 1
+            winner = "player 1"
 
             # Adjust health
             player_1_health_adjustment = int(player_1.current_pokemon[1]) + 5  # Increase health of winning Pokémon
@@ -301,6 +318,7 @@ class Gameplay:
             print(f"          {player_1.current_pokemon[2]} < {player_2.current_pokemon[2]}")
             print(f"\n\nPlayer 2 wins!\n\n")
             player_2.wins += 1
+            winner = "player 2"
 
             # Adjust health
             player_1_health_adjustment =  max(0, int(player_1.current_pokemon[1]) - 10)  # Decrease health of losing Pokémon
@@ -309,11 +327,15 @@ class Gameplay:
             print("Health")
             print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
             print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
+            
 
         # Draw
         else:
             print(f"          {player_1.current_pokemon[1]} = {player_2.current_pokemon[1]}")
             print(f"\n\nIt's a draw!\n\n")
+            winner = "Draw"
+
+        self.add_battle( player_1.current_pokemon, player_2.current_pokemon, winner)
         
 
 
