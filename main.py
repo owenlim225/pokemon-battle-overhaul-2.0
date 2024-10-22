@@ -21,7 +21,8 @@ class Player:
 
 class Gameplay:
     def __init__(self) -> None:
-                
+        self.battle_records = []
+
         self.pokemon_array = np.array([
                 # Name         Health  Power Lvl   blessing
                 ["Bulbasaur",   100,      85,        0],
@@ -41,11 +42,14 @@ class Gameplay:
         self.player_2 = Player()
 
 
-    battle_records
+    def battle_summary(self, battle_records, player_1, player_2) -> None:
+        pass
 
 
 
-    #✅ Working
+
+
+    #🟧 not yet tested
     def run(self) -> None: 
         _in_game = True
         
@@ -116,7 +120,7 @@ class Gameplay:
                     else:
                         os.system('cls')
                         print("The game ends")
-                        self.battle_records(self.player_1, self.player_2)
+                        self.battle_summary(self.player_1, self.battle_records, self.player_2)
                         time.sleep(3)
 
                         print("\n\nThank you for playing!")
@@ -179,6 +183,7 @@ class Gameplay:
             print(f"Error: {e}. Please try again.")
 
 
+
     #✅ Working
     def player_pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: 
         while True:
@@ -234,6 +239,7 @@ class Gameplay:
             except ValueError as e:
                 print(f"Invalid input. Error: {e}. Please enter valid numbers separated by spaces.")
                 time.sleep(3)
+
 
 
     #✅ Working
@@ -308,13 +314,11 @@ class Gameplay:
         else:
             print(f"          {player_1.current_pokemon[1]} = {player_2.current_pokemon[1]}")
             print(f"\n\nIt's a draw!\n\n")
-
         
 
 
         
-
-
+    #🟧 not yet tested
     def change_battle_pokemon(self, player) -> None:
         # Ensure current_pokemon is not None before transferring
         if player.current_pokemon is not None and player.current_pokemon.size > 0:
@@ -328,7 +332,6 @@ class Gameplay:
             player.current_pokemon = np.empty((0, 3), dtype=object)
         else:
             print("No current Pokémon to transfer.")
-
 
 
         
