@@ -60,20 +60,29 @@ class Gameplay:
         self.potion_or_poison(self.player1)
         self.potion_or_poison(self.player2)
 
+        print("\Round two battle...\n")
+        time.sleep(2)
+        os.system('cls')
+
+        self.potion_or_poison(self.player1)
+        self.potion_or_poison(self.player2)
 
 
-    #❌ Not properly tested
+
+    #✅ Working
     def potion_or_poison(self, player) -> None:
-        rand_effect = random.choice(["poison", "potion"])
-
-        # Check if the blessing value exists at index 3, or assign a new one
-        if player.current_pokemon.shape[0] <= 3:  # If blessing value doesn't exist
+        # Generate or reuse the blessing value
+        if player.current_pokemon.shape[0] <= 3 or int(player.current_pokemon[3]) == 0:
             rand_val = random.randint(10, 15)
-            player.current_pokemon = np.append(player.current_pokemon, rand_val)  # Append blessing value
+            if player.current_pokemon.shape[0] <= 3:
+                player.current_pokemon = np.append(player.current_pokemon, rand_val)
+            else:
+                player.current_pokemon[3] = rand_val
+            print(f"\n👼 passed by and gave your {player.current_pokemon[0]} {rand_val} blessings!!")
         else:
-            rand_val = int(player.current_pokemon[3])  # Use existing blessing value
+            rand_val = int(player.current_pokemon[3])
+            print(f"\n👼 saw that your {player.current_pokemon[0]} still has {rand_val} blessings.")
 
-        print(f"\n👼 passed by and gave your {player.current_pokemon[0]} {rand_val} blessings!!")
         print("\n🧙 asked if you like to trade your blessings for a random effect.\n")
 
         try:
@@ -84,26 +93,29 @@ class Gameplay:
             if user_choice == "y":
                 print("\n🧙 casted a spell...")
 
-                if rand_effect == "poison":
+                # If user agrees, the blessing val of the current pokemon removed. Reduce the power lvl as per choice.           
+                if random.choice(["poison", "potion"]) == "poison":
                     new_power = max(0, int(player.current_pokemon[2]) - rand_val)
                     print(f"\nYour blessing turned into poison! Your {player.current_pokemon[0]} lost power!")
                     print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
                     player.current_pokemon[2] = new_power
-
-                elif rand_effect == "potion":
+                
+                # Retain the blessing val and will be asked to be used up again later.
+                else:
                     new_power = int(player.current_pokemon[2]) + rand_val
                     print(f"\nYour blessing turned into potion! Your {player.current_pokemon[0]} gained power!")
                     print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
                     player.current_pokemon[2] = new_power
 
+                # Reset the blessing value to 0 after use
+                player.current_pokemon[3] = 0
+                print(f"\nThe blessing has been used and is now reset to 0.")
+
             else:
                 print("\nYou kept your blessings untouched.")
-                player.current_pokemon[3] = rand_val  # Store the blessing value
 
         except ValueError as e:
             print(f"Error: {e}. Please try again.")
-
-
 
 
     #✅ Working
