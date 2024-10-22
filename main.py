@@ -37,35 +37,96 @@ class Gameplay:
         ])  
 
         # Players 
-        self.player1 = Player()
-        self.player2 = Player()
+        self.player_1 = Player()
+        self.player_2 = Player()
+
+
+    battle_records
+
+
 
     #✅ Working
     def run(self) -> None: 
-        self.player_pokemon_selection(self.player1, 4, False)
-        self.player_pokemon_selection(self.player2, len(self.player1.pokemons), True)
+        _in_game = True
+        
+        # Game loop 
+        while _in_game:
+            self.player_pokemon_selection(self.player_1, 4, False)
+            self.player_pokemon_selection(self.player_2, len(self.player_1.pokemons), True)
 
-        print("\nPreparing pokemon...\n")
-        time.sleep(2)
-        os.system('cls')
+            print("\nPreparing pokemon...\n")
+            time.sleep(2)
+            os.system('cls')
 
-        self.choose_battle_pokemon(self.player1)
-        self.choose_battle_pokemon(self.player2)
+            self.choose_battle_pokemon(self.player_1)
+            self.choose_battle_pokemon(self.player_2)
+
+            print("\nPreparing...\n")
+            time.sleep(2)
+            os.system('cls')
+
+            self.potion_or_poison(self.player_1)
+            self.potion_or_poison(self.player_2)
 
 
-        print("\nPreparing battle...\n")
-        time.sleep(2)
-        os.system('cls')
 
-        self.potion_or_poison(self.player1)
-        self.potion_or_poison(self.player2)
+            # Start of battle
+            print("\nPreparing battle...\n")
+            time.sleep(2)
+            os.system('cls')
 
-        print("\Round two battle...\n")
-        time.sleep(2)
-        os.system('cls')
+            self.pokemon_battle(self.player_1, self.player_2)
+            time.sleep(2)
+            self.fatigue_factor(self.player_1, self.player_2) # Apply fatigue adjustments
+            time.sleep(3)
 
-        self.potion_or_poison(self.player1)
-        self.potion_or_poison(self.player2)
+            
+            try:
+                user_choice = input("Would you like to change your battle pokemon? [Y/N]: ").strip().lower()
+
+                if user_choice not in ["y", "n"]:
+                    raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
+
+                if user_choice == "y":
+                    self.change_battle_pokemon()
+                else:
+                    pass
+
+            except ValueError as e:
+                print(f"Error: {e}. Please try again.")
+
+            
+            # As long as all pokemon of players are not used, the game continues to battle.
+            while len(self.player_1.pokemons) != len(self.player_1.used_pokemons) and len(self.player_2.pokemons) != len(self.player_2.used_pokemons):
+                continue
+            else:
+                print("All pokemons from both players are used, you are now able to stop the battle.\n")
+
+                try:
+                    user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
+
+                    if user_choice not in ["y", "n"]:
+                        raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
+
+                    # Continue the battle until the players are satisfied
+                    if user_choice == "y":
+                        continue 
+                    
+                    # Ends the game. Display the battle record
+                    else:
+                        os.system('cls')
+                        print("The game ends")
+                        self.battle_records(self.player_1, self.player_2)
+                        time.sleep(3)
+
+                        print("\n\nThank you for playing!")
+                        os._exit()
+                        
+                        
+
+
+                except ValueError as e:
+                    print(f"Error: {e}. Please try again.")
 
 
 
@@ -208,6 +269,80 @@ class Gameplay:
 
 
 
+    #🟧 not yet tested
+    def pokemon_battle(self, player_1, player_2) -> None:
+        os.system('cls') #clear terminal 
+
+        print("\n\nBattle start!\n\n")
+        print(f"Player 1: {player_1.current_pokemon[0]} vs {player_2.current_pokemon[0]}: Player 2\n")
+
+        # Player 1 wins
+        if int(player_1.current_pokemon[2]) > int(player_2.current_pokemon[2]):
+            print(f"          {player_1.current_pokemon[2]} > {player_2.current_pokemon[2]}")
+            print(f"\n\nPlayer 1 wins!\n\n")
+            player_1.wins += 1
+
+            # Adjust health
+            player_1_health_adjustment = int(player_1.current_pokemon[1]) + 5  # Increase health of winning Pokémon
+            player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 10)  # Decrease health of losing Pokémon
+
+            print("Health")
+            print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
+            print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
+
+        # Player 2 wins
+        elif int(player_1.current_pokemon[1]) < int(player_2.current_pokemon[1]):
+            print(f"          {player_1.current_pokemon[2]} < {player_2.current_pokemon[2]}")
+            print(f"\n\nPlayer 2 wins!\n\n")
+            player_2.wins += 1
+
+            # Adjust health
+            player_1_health_adjustment =  max(0, int(player_1.current_pokemon[1]) - 10)  # Decrease health of losing Pokémon
+            player_2_health_adjustment = int(player_2.current_pokemon[1]) + 5  # Increase health of winning Pokémon
+
+            print("Health")
+            print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
+            print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
+
+        # Draw
+        else:
+            print(f"          {player_1.current_pokemon[1]} = {player_2.current_pokemon[1]}")
+            print(f"\n\nIt's a draw!\n\n")
+
+        
+
+
+        
+
+
+    def change_battle_pokemon(self, player) -> None:
+        # Ensure current_pokemon is not None before transferring
+        if player.current_pokemon is not None and player.current_pokemon.size > 0:
+            # Transfer current Pokémon to used Pokémon array
+            player.used_pokemons = (
+                np.vstack([player.used_pokemons, player.current_pokemon])
+                if player.used_pokemons.size else np.array([player.current_pokemon], dtype=object)
+            )
+
+            # Clear current Pokémon after transfer
+            player.current_pokemon = np.empty((0, 3), dtype=object)
+        else:
+            print("No current Pokémon to transfer.")
+
+
+
+        
+    #🟧 not yet tested
+    def fatigue_factor(self, player_1, player_2) -> None:
+        # Decrease health of both current Pokémon by 2
+        player_1_health_adjustment = max(0, int(player_1.current_pokemon[1]) - 2)
+        player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 2)
+
+        print("Both of your pokémons feel fatigued. Both lost 2 health points...")
+        print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
+        print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
+        time.sleep(3)
+        os.system('cls')
 
 
 
@@ -217,11 +352,11 @@ if __name__ == "__main__":
     _game = Gameplay()
     _game.run()
 
-    print(f"\n\nplayer 1 pokemons: {_game.player1.pokemons}\n\n")
-    print(f"\n\nplayer 2 pokemons: {_game.player2.pokemons}\n\n")
+    print(f"\n\nplayer 1 pokemons: {_game.player_1.pokemons}\n\n")
+    print(f"\n\nplayer 2 pokemons: {_game.player_2.pokemons}\n\n")
 
-    print(f"\n\nplayer 1 battle pokemons: {_game.player1.current_pokemon}\n\n")
-    print(f"\n\nplayer 2 battle pokemons: {_game.player2.current_pokemon}\n\n")
+    print(f"\n\nplayer 1 battle pokemons: {_game.player_1.current_pokemon}\n\n")
+    print(f"\n\nplayer 2 battle pokemons: {_game.player_2.current_pokemon}\n\n")
 
     print(f"Available pokemons", _game.pokemon_array)
     
