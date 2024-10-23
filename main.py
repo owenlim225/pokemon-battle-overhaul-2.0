@@ -70,25 +70,26 @@ class Gameplay:
 
     #🟧 not yet tested
     def run(self) -> None:
-        _in_game = True
+        _in_battle = True
 
+        # Player Pokémon selection
+        self.player_pokemon_selection(self.player_1, 4, False)
+        self.player_pokemon_selection(self.player_2, len(self.player_1.pokemons), True)
+
+        print("\nPreparing pokemon...\n")
+        time.sleep(2)
+        os.system('cls')
+        
         # Main game loop
-        while _in_game:
-            # Player Pokémon selection
-            self.player_pokemon_selection(self.player_1, 4, False)
-            self.player_pokemon_selection(self.player_2, len(self.player_1.pokemons), True)
-
-            print("\nPreparing pokemon...\n")
-            time.sleep(2)
-            os.system('cls' if os.name == 'nt' else 'clear')
-
+        while _in_battle:
             # Players choose their battle Pokémon
             self.choose_battle_pokemon(self.player_1)
             self.choose_battle_pokemon(self.player_2)
 
+            
             print("\nPreparing...\n")
             time.sleep(2)
-            os.system('cls' if os.name == 'nt' else 'clear')
+            os.system('cls')
 
             # Apply potion or poison effects
             self.potion_or_poison(self.player_1)
@@ -97,49 +98,51 @@ class Gameplay:
             # Start of battle
             print("\nPreparing battle...\n")
             time.sleep(2)
-            os.system('cls' if os.name == 'nt' else 'clear')
+            os.system('cls')
 
             # Execute the battle and apply fatigue adjustments
             self.pokemon_battle(self.player_1, self.player_2)  # Main battle
-            time.sleep(2)
+            time.sleep(7)
             self.fatigue_factor(self.player_1, self.player_2)  # Fatigue adjustments
-            time.sleep(5)
+            time.sleep(7)
 
-            # # Track if Pokémon were changed
-            # player1_changed = self.prompt_pokemon_change(self.player_1, "Player 1")
-            # player2_changed = self.prompt_pokemon_change(self.player_2, "Player 2")
+            # Track if Pokémon were changed
+            player1_changed = self.prompt_pokemon_change(self.player_1, "Player 1")
+            player2_changed = self.prompt_pokemon_change(self.player_2, "Player 2")
 
-            # # Increment used Pokémon count only if changed
-            # if player1_changed:
-            #     self.player_1.used_pokemons += 1
-            # if player2_changed:
-            #     self.player_2.used_pokemons += 1
+            # Increment used Pokémon count only if changed
+            if player1_changed:
+                self.player_1.used_pokemons += 1
+            if player2_changed:
+                self.player_2.used_pokemons += 1
 
-            # # Check if all Pokémon have been used
-            # if self.player_1.used_pokemons >= len(self.player_1.pokemons) and \
-            # self.player_2.used_pokemons >= len(self.player_2.pokemons):
-            #     print("All pokemons from both players are used, you are now able to stop the battle.\n")
+            # Check if all Pokémon have been used
+            if self.player_1.used_pokemons == len(self.player_1.pokemons) and \
+            self.player_2.used_pokemons == len(self.player_2.pokemons):
+            
+                print("All pokemons from both players are used, you are now able to stop the battle.\n")
+                
+                try:
+                    user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
 
-            #     try:
-            #         user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
+                    if user_choice not in ["y", "n"]:
+                        raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
 
-            #         if user_choice not in ["y", "n"]:
-            #             raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
+                    # If the player chooses to stop, end the game
+                    if user_choice == "n":
+                        _in_battle = False
 
-            #         # If the player chooses to stop, end the game
-            #         if user_choice == "n":
-            #             _in_game = False
-
-            #     except ValueError as e:
-            #         print(f"Error: {e}. Please try again.")
-        
+                except ValueError as e:
+                    print(f"Error: {e}. Please try again.")
+            else:
+                continue
 
         # Ends the game
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system('cls')
         print("The game ends\n")
         print(self.battle_summary)
-        time.sleep(3)
         print("\n\nThank you for playing!")
+        time.sleep(5)
         os._exit(0)  # Exit the game
 
 
@@ -156,8 +159,9 @@ class Gameplay:
             if user_choice == "y":
                 self.change_battle_pokemon(player)
                 return True  # Pokémon changed
-
-            return False  # Pokémon not changed
+            else:
+                print("You kept your current pokemon.")
+                return False  # Pokémon not changed
 
         except ValueError as e:
             print(f"Error: {e}. Please try again.")
@@ -167,22 +171,40 @@ class Gameplay:
 
     #🟧 not yet tested
     def change_battle_pokemon(self, player) -> None:
-        # Ensure current_pokemon is not None before transferring
-        if player.current_pokemon is not None and player.current_pokemon.size > 0:
-            # Transfer current Pokémon to used Pokémon array
-            player.used_pokemons = (
-                np.vstack([player.used_pokemons, player.current_pokemon])
-                if player.used_pokemons.size else np.array([player.current_pokemon], dtype=object)
-            )
+        """Allows the player to swap their current battle Pokémon with one from their available Pokémon."""
+        try:
+            # Display the available Pokémon with their indexes
+            print("Available Pokémon:")
+            for i, pokemon in enumerate(player.pokemons):
+                print(f"{i}: {pokemon[0]} (Health: {pokemon[1]}, Power: {pokemon[2]})")
 
-            # Clear current Pokémon after transfer
-            player.current_pokemon = np.empty((0, 3), dtype=object)
-        else:
-            print("No current Pokémon to transfer.")
+            # Ask the user to select the index of the Pokémon to swap
+            index = int(input("Select your new battle Pokémon: "))
+
+            # Validate the input index
+            if index < 0 or index >= len(player.pokemons):
+                raise ValueError("Invalid index. Please select a valid Pokémon.")
+
+            # If there's already a Pokémon in `current_pokemon`, add it back to the list
+            if player.current_pokemon is not None and player.current_pokemon.size > 0:
+                player.pokemons = np.vstack([player.pokemons, player.current_pokemon])
+
+            # Update `current_pokemon` with the selected Pokémon
+            player.current_pokemon = player.pokemons[index]
+
+            # Remove the selected Pokémon from `pokemons`
+            player.pokemons = np.delete(player.pokemons, index, axis=0)
+
+            print(f"\n{player.current_pokemon[0]} is now ready for battle!\n")
+
+        except ValueError as e:
+            print(f"Error: {e}. Please try again.")
 
 
 
-    #🟧 not yet tested
+
+
+    #✅ Working
     def pokemon_battle(self, player_1, player_2) -> None:
         os.system('cls') #clear terminal 
 
