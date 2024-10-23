@@ -105,33 +105,33 @@ class Gameplay:
             self.fatigue_factor(self.player_1, self.player_2)  # Fatigue adjustments
             time.sleep(5)
 
-            # Track if Pokémon were changed
-            player1_changed = self.prompt_pokemon_change(self.player_1, "Player 1")
-            player2_changed = self.prompt_pokemon_change(self.player_2, "Player 2")
+            # # Track if Pokémon were changed
+            # player1_changed = self.prompt_pokemon_change(self.player_1, "Player 1")
+            # player2_changed = self.prompt_pokemon_change(self.player_2, "Player 2")
 
-            # Increment used Pokémon count only if changed
-            if player1_changed:
-                self.player_1.used_pokemons += 1
-            if player2_changed:
-                self.player_2.used_pokemons += 1
+            # # Increment used Pokémon count only if changed
+            # if player1_changed:
+            #     self.player_1.used_pokemons += 1
+            # if player2_changed:
+            #     self.player_2.used_pokemons += 1
 
-            # Check if all Pokémon have been used
-            if self.player_1.used_pokemons >= len(self.player_1.pokemons) and \
-            self.player_2.used_pokemons >= len(self.player_2.pokemons):
-                print("All pokemons from both players are used, you are now able to stop the battle.\n")
+            # # Check if all Pokémon have been used
+            # if self.player_1.used_pokemons >= len(self.player_1.pokemons) and \
+            # self.player_2.used_pokemons >= len(self.player_2.pokemons):
+            #     print("All pokemons from both players are used, you are now able to stop the battle.\n")
 
-                try:
-                    user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
+            #     try:
+            #         user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
 
-                    if user_choice not in ["y", "n"]:
-                        raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
+            #         if user_choice not in ["y", "n"]:
+            #             raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
 
-                    # If the player chooses to stop, end the game
-                    if user_choice == "n":
-                        _in_game = False
+            #         # If the player chooses to stop, end the game
+            #         if user_choice == "n":
+            #             _in_game = False
 
-                except ValueError as e:
-                    print(f"Error: {e}. Please try again.")
+            #     except ValueError as e:
+            #         print(f"Error: {e}. Please try again.")
         
 
         # Ends the game
