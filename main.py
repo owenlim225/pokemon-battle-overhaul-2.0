@@ -21,6 +21,7 @@ class Player:
 
 
 class Gameplay:
+    #✅ Working
     def __init__(self) -> None:
         self.battle_count = 0
 
@@ -50,7 +51,8 @@ class Gameplay:
         self.player_1 = Player()
         self.player_2 = Player()
 
-    #🟧 not yet tested
+
+    #✅ Working
     def add_battle(self, player1_pokemon, player2_pokemon, winner):
         """Adds a battle entry to the summary."""
         # Create a copy of the Pokémon data to avoid changes affecting the record
@@ -74,78 +76,7 @@ class Gameplay:
         self.battle_count += 1
 
 
-
-    #🟧 not yet tested
-    def run(self) -> None:
-        _in_battle = True
-
-        # Player Pokémon selection
-        self.player_pokemon_selection(self.player_1, 4, False)
-        self.player_pokemon_selection(self.player_2, len(self.player_1.pokemons), True)
-
-        print("\nPreparing pokemon...\n")
-        time.sleep(2)
-        os.system('cls')
-
-        # Main game loop
-        while _in_battle:
-            print("\nPreparing battle...\n")
-            time.sleep(2)
-            os.system('cls')
-
-            if self.battle_count <= 1:
-                self.choose_battle_pokemon(self.player_1)
-                self.choose_battle_pokemon(self.player_2)
-            else:
-                # Players choose their battle Pokémon
-                if not self.prompt_pokemon_change(self.player_1, "Player 1"):
-                    print("Player 1 keeps the same Pokémon.")
-                if not self.prompt_pokemon_change(self.player_2, "Player 2"):
-                    print("Player 2 keeps the same Pokémon.")
-
-
-            print("\nPreparing...\n")
-            time.sleep(2)
-            os.system('cls')
-
-            # Apply potion or poison effects
-            self.potion_or_poison(self.player_1)
-            self.potion_or_poison(self.player_2)
-
-            # Start of battle
-            print("\nPreparing battle...\n")
-            time.sleep(2)
-            os.system('cls')
-
-
-            time.sleep(5)
-            # Execute the battle and apply fatigue adjustments
-            self.pokemon_battle(self.player_1, self.player_2)  # Main battle
-            time.sleep(7)
-            self.fatigue_factor(self.player_1, self.player_2)  # Fatigue adjustments
-            time.sleep(7)
-
-            # Check if all Pokémon have been used
-            if self.player_1.used_pokemons == len(self.player_1.pokemons) and \
-               self.player_2.used_pokemons == len(self.player_2.pokemons):
-                try:
-                    user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
-                    if user_choice not in ["y", "n"]:
-                        raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
-                        
-                    if user_choice == "n":
-                        break
-                    else:
-                        continue
-
-                except ValueError as e:
-                    print(f"Error: {e}. Please try again.")
-                    
-
-        # End the game
-        self.end_game()
-
-
+    #✅ Working
     def end_game(self) -> None:
         """Handle game end and display the battle summary."""
         os.system('cls')
@@ -156,9 +87,7 @@ class Gameplay:
         os._exit(0)  # Exit the game
 
 
-
-
-    #🟧 not yet tested
+    #✅ Working
     def prompt_pokemon_change(self, player, player_name) -> bool:
         """Prompts the player to change their battle Pokémon. Returns True if changed, False otherwise."""
         try:
@@ -177,8 +106,7 @@ class Gameplay:
             return self.prompt_pokemon_change(player, player_name)
 
 
-
-    #🟧 not yet tested
+    #✅ Working
     def change_battle_pokemon(self, player) -> None:
         """Allows the player to swap their current battle Pokémon with one from their available Pokémon."""
         try:
@@ -205,12 +133,10 @@ class Gameplay:
             player.pokemons = np.delete(player.pokemons, index, axis=0)
 
             print(f"\n{player.current_pokemon[0]} is now ready for battle!\n")
+            player.used_pokemons += 1
 
         except ValueError as e:
             print(f"Error: {e}. Please try again.")
-
-
-
 
 
     #✅ Working
@@ -260,7 +186,6 @@ class Gameplay:
         self.add_battle( player_1.current_pokemon, player_2.current_pokemon, winner)
        
 
-
     #✅ Working
     def potion_or_poison(self, player) -> None:
         # Generate or reuse the blessing value
@@ -308,7 +233,6 @@ class Gameplay:
 
         except ValueError as e:
             print(f"Error: {e}. Please try again.")
-
 
 
     #✅ Working
@@ -368,7 +292,6 @@ class Gameplay:
                 time.sleep(3)
 
 
-
     #✅ Working
     def choose_battle_pokemon(self, player) -> None:
         while True:
@@ -408,8 +331,6 @@ class Gameplay:
                 time.sleep(3)
 
 
-     
-
     #✅ Working
     def fatigue_factor(self, player_1, player_2) -> None:
         # Decrease health of both current Pokémon by 2
@@ -423,18 +344,100 @@ class Gameplay:
         os.system('cls')
 
 
+    #✅ Working
+    def run(self) -> None:
+        _in_battle = True
+
+        # Player Pokémon selection
+        self.player_pokemon_selection(self.player_1, 4, False)
+        self.player_pokemon_selection(self.player_2, len(self.player_1.pokemons), True)
+
+        print("\nPreparing pokemon...\n")
+        time.sleep(2)
+        os.system('cls')
+
+        #✅ Working
+        # Main game loop
+        while _in_battle:
+            print("\nPreparing battle...\n")
+            time.sleep(2)
+            os.system('cls')
+
+            #✅ Working
+            if not self.battle_count:
+                self.choose_battle_pokemon(self.player_1)
+                self.choose_battle_pokemon(self.player_2)
+            else:
+                #✅ Working
+                # Players choose their battle Pokémon
+                if not self.prompt_pokemon_change(self.player_1, "Player 1"):
+                    print("Player 1 keeps the same Pokémon.")
+                if not self.prompt_pokemon_change(self.player_2, "Player 2"):
+                    print("Player 2 keeps the same Pokémon.")
 
 
+            print("\nPreparing...\n")
+            time.sleep(2)
+            os.system('cls')
+
+            #✅ Working
+            # Apply potion or poison effects
+            self.potion_or_poison(self.player_1)
+            self.potion_or_poison(self.player_2)
+
+            # Start of battle
+            print(f"\nPreparing battle {self.battle_count}...\n")
+            time.sleep(2)
+            os.system('cls')
+            time.sleep(5)
+
+            #✅ Working
+            # Execute the battle and apply fatigue adjustments
+            self.pokemon_battle(self.player_1, self.player_2)  # Main battle
+            time.sleep(7)
+            self.fatigue_factor(self.player_1, self.player_2)  # Fatigue adjustments
+            time.sleep(7)
+
+            # ===============================Debugger===============================
+            # print("debug\nself.player_1.used_pokemons", self.player_1.used_pokemons)
+            # print("len(self.player_1.pokemons)", len(self.player_1.pokemons))
+            # print("self.player_2.used_pokemons", self.player_2.used_pokemons)
+            # print("len(self.player_2.pokemons)", len(self.player_2.pokemons))
+            # ======================================================================
+
+            #✅ Working
+            # Check if all Pokémon have been used 
+            if self.player_1.used_pokemons == len(self.player_1.pokemons) and \
+               self.player_2.used_pokemons == len(self.player_2.pokemons):
+                try:
+                    print("All pokemons were used in the battle.\n")
+                    user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
+                    if user_choice not in ["y", "n"]:
+                        raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
+                        
+                    if user_choice == "n": 
+                        break
+                    else:
+                        continue
+
+                except ValueError as e:
+                    print(f"Error: {e}. Please try again.")
+            else:
+                continue
+                    
+        #✅ Working
+        # End the game
+        self.end_game()
 
 if __name__ == "__main__":
     _game = Gameplay()
     _game.run()
 
-    print(f"\n\nplayer 1 pokemons: {_game.player_1.pokemons}\n\n")
-    print(f"\n\nplayer 2 pokemons: {_game.player_2.pokemons}\n\n")
+    # print(f"\n\nplayer 1 pokemons: {_game.player_1.pokemons}\n\n")
+    # print(f"\n\nplayer 2 pokemons: {_game.player_2.pokemons}\n\n")
 
-    print(f"\n\nplayer 1 battle pokemons: {_game.player_1.current_pokemon}\n\n")
-    print(f"\n\nplayer 2 battle pokemons: {_game.player_2.current_pokemon}\n\n")
+    # print(f"\n\nplayer 1 battle pokemons: {_game.player_1.current_pokemon}\n\n")
+    # print(f"\n\nplayer 2 battle pokemons: {_game.player_2.current_pokemon}\n\n")
 
-    print(f"Available pokemons", _game.pokemon_array)
+    # print(f"Available pokemons", _game.pokemon_array)
     
