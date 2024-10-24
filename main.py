@@ -93,7 +93,7 @@ class Gameplay:
                     
         #✅ Working
         # End the game
-        self.backend.end_game()
+        self.frontend.end_game()
 
 if __name__ == "__main__":
     _game = Gameplay()

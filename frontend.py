@@ -1,5 +1,7 @@
-# frontend.py
+import time, os
 from backend import Backend
+
+from rich.text import Text
 from rich.console import Console
 from rich.table import Table
 from rich.box import HEAVY  # Import correct box type
@@ -10,6 +12,7 @@ class Frontend:
         self.backend = Backend()
         self.console = Console()
 
+    #✅ Working
     def display_battle_summary(self):
         battle_summary = self.backend.battle_summary
 
@@ -27,7 +30,26 @@ class Frontend:
         # Print the table using rich
         self.console.print(table)
 
+    #✅ Working
+    def end_game(self) -> None:
+        """Handle game end and display the battle summary."""
+        os.system('cls')
+
+        # Display game end message with green text
+        end_message = Text("\t\t\t\t      Battle Summary\n", style="red")
+        self.console.print(end_message)
+
+        # Display battle summary
+        self.display_battle_summary()
+
+        # Print a thank-you message in green
+        thank_you_message = Text("\n\n\t\t\t\tThank you for playing!\n\n\n\n", style="green")
+        self.console.print(thank_you_message)
+
+        time.sleep(10)
+        os._exit(0)  # Exit the game
+
 # Example usage
 if __name__ == "__main__":
     frontend = Frontend()
-    frontend.display_battle_summary()
+    frontend.end_game()

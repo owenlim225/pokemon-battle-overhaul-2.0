@@ -35,7 +35,7 @@ class Backend:
     # def add_sample_data(self):
     #     sample_data = [
     #         ["Pikachu", 35, 55, "Charmander", 39, 52, "Pikachu"],
-    #         ["Squirtle", 44, 48, "Bulbasaur", 45, 49, "Bulbasaur"]
+    #         ["Squirtle", 44, 48, "Bulbasaur", 45, 49, "Bulbasaur"],
     #     ]
     #     for row in sample_data:
     #         self.battle_summary.loc[len(self.battle_summary)] = row
@@ -81,17 +81,6 @@ class Backend:
 
         # Increment battle count
         self.battle_count += 1
-
-
-    #✅ Working
-    def end_game(self) -> None:
-        """Handle game end and display the battle summary."""
-        os.system('cls')
-        print("The game ends\n")
-        print(self.battle_summary)
-        print("\n\nThank you for playing!")
-        time.sleep(10)
-        os._exit(0)  # Exit the game
 
 
     #✅ Working
