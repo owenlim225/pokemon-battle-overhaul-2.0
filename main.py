@@ -1,6 +1,4 @@
-import time, os, random
-import numpy as np
-import pandas as pd
+import time, os
 from backend import Backend, Player
 from frontend import Frontend
 
