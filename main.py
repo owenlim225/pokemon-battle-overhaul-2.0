@@ -19,7 +19,6 @@ class Player:
         self.wins = 0
 
 
-
 class Gameplay:
     #✅ Working
     def __init__(self) -> None:
@@ -429,9 +428,11 @@ class Gameplay:
         # End the game
         self.end_game()
 
+
 if __name__ == "__main__":
     _game = Gameplay()
     _game.run()
+
 
     # print(f"\n\nplayer 1 pokemons: {_game.player_1.pokemons}\n\n")
     # print(f"\n\nplayer 2 pokemons: {_game.player_2.pokemons}\n\n")
