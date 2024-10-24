@@ -1,10 +1,12 @@
 import time, os
 from backend import Backend, Player
+from frontend import Frontend
 from rich.console import Console
 
 class Gameplay:
     def __init__(self) -> None:
         self.backend = Backend()
+        self.frontend = Frontend()
         self.console = Console()
 
         # Players 
@@ -16,8 +18,8 @@ class Gameplay:
         _in_battle = True
 
         # Player Pokémon selection
-        self.backend.player_pokemon_selection(self.player_1, 4, False)
-        self.backend.player_pokemon_selection(self.player_2, len(self.player_1.pokemons), True)
+        self.frontend.player_pokemon_selection(self.player_1, 4, False)
+        self.frontend.player_pokemon_selection(self.player_2, len(self.player_1.pokemons), True)
 
         print("\nPreparing pokemon...\n")
         time.sleep(2)
@@ -32,8 +34,8 @@ class Gameplay:
 
             #✅ Working
             if not self.backend.battle_count:
-                self.backend.choose_battle_pokemon(self.player_1)
-                self.backend.choose_battle_pokemon(self.player_2)
+                self.frontend.choose_battle_pokemon(self.player_1, "Player 1")
+                self.frontend.choose_battle_pokemon(self.player_2, "Player 2")
             else:
                 #✅ Working
                 # Players choose their battle Pokémon
@@ -49,8 +51,8 @@ class Gameplay:
 
             #✅ Working
             # Apply potion or poison effects
-            self.backend.potion_or_poison(self.player_1)
-            self.backend.potion_or_poison(self.player_2)
+            self.frontend.potion_or_poison(self.player_1)
+            self.frontend.potion_or_poison(self.player_2)
 
             # Start of battle
             print(f"\nPreparing battle {self.backend.battle_count}...\n")

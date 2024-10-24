@@ -1,8 +1,7 @@
 import time, os, random
 import numpy as np
 import pandas as pd
-from rich.text import Text
-from rich.console import Console
+
 
 class Player:
     def __init__(self) -> None:
@@ -23,8 +22,6 @@ class Backend:
     #✅ Working
     def __init__(self) -> None:
         self.battle_count = 0
-        self.console = Console()
-        
 
         # Initialize a battle summary DataFrame
         self.battle_summary = pd.DataFrame(columns=[
@@ -33,7 +30,7 @@ class Backend:
             "Winner"
         ])
 
-    # ===============================Debugger===============================
+    # =============================🐞Debugger===============================
     #     self.add_sample_data()
 
     # def add_sample_data(self):
@@ -59,8 +56,6 @@ class Backend:
                 ["Snorlax",     110,      95,        0],
                 ["Squirtle",    105,      85,        0]
         ])  
-
-        
 
 
     #✅ Working
@@ -195,6 +190,7 @@ class Backend:
                 player.current_pokemon = np.append(player.current_pokemon, rand_val)
             else:
                 player.current_pokemon[3] = rand_val
+                
             print(f"\n👼 passed by and gave your {player.current_pokemon[0]} {rand_val} blessings!!")
         else:
             rand_val = int(player.current_pokemon[3])
@@ -235,7 +231,7 @@ class Backend:
             print(f"Error: {e}. Please try again.")
 
 
-    # 🟧 Not tested yet
+    #✅ Working
     def player_pokemon_selection(self, player, player_picks):
         """Process player Pokémon selection."""
         # Extract selected Pokémon based on player picks
@@ -250,46 +246,38 @@ class Backend:
         # Remove the selected Pokémon from the original array
         self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
         
-        print("debug:", player.pokemons)
+        #🐞 Debugger ======================
+        # print("debug:", player.pokemons)
+        #==================================
 
     #✅ Working
     def choose_battle_pokemon(self, player) -> None:
+        """Process the player's selection of a Pokémon for battle."""
+        if player.pokemons.size == 0:
+            print("You have no available Pokémon to select.")
+            return  # Exit if no Pokémon are available
+
+        # Get the player's selected Pokémon index
         while True:
             try:
-                # Check if the player has available Pokémon
-                if player.pokemons.size == 0:
-                    print("You have no available Pokémon to select.")
-                    return  # Exit the function if no Pokémon are available
-
-                # Print the player's available Pokémon
-                print("Available Pokémon:\n")
-                for i, pokemon in enumerate(player.pokemons):
-                    print(f"{i}: {pokemon[0]} (Health: {pokemon[1]}, Power: {pokemon[2]})")
-
-                # Ask the player to select a Pokémon for battle
                 battle_pick = int(input("Please select your battle Pokémon (index): "))
 
-                # Validate the selection
+                # Validate the input index
                 if battle_pick < 0 or battle_pick >= len(player.pokemons):
                     print("Invalid selection. Please pick one of your available Pokémon.")
                     continue
 
-                # Extract the selected Pokémon
-                selected_pokemon = player.pokemons[battle_pick, :]
-
                 # Assign the selected Pokémon to the player's current Pokémon
-                player.current_pokemon = selected_pokemon
+                player.current_pokemon = player.pokemons[battle_pick]
 
                 # Remove the selected Pokémon from the player's available Pokémon
                 player.pokemons = np.delete(player.pokemons, battle_pick, axis=0)
-
-                print(f"Current battle Pokémon: {player.current_pokemon}")
                 break  # Exit loop on successful selection
 
             except ValueError as e:
                 print(f"Invalid input. Error: {e}. Please enter a valid number.")
-                time.sleep(3)
 
+    
 
     #✅ Working
     def fatigue_factor(self, player_1, player_2) -> None:

@@ -16,6 +16,58 @@ class Frontend:
 
         self.console = Console()
 
+
+    #✅ Working
+    def display_player_pokemons(self, player, player_name):
+        """Display the player's available Pokémon using a rich table."""
+        if player.pokemons.size == 0:
+            self.console.print("[bold red]You have no available Pokémon to select.[/bold red]")
+            return False  # Return if no Pokémon are available
+        
+        # Create a rich table with a heavy border
+        table = Table(border_style="bold white", box=HEAVY, title=f"[bold green]{player_name}'s pokemon[/bold green]")
+
+        # Add columns for Pokémon attributes
+        table.add_column("Index", justify="center")
+        table.add_column("Name", justify="center")
+        table.add_column("Health", justify="center")
+        table.add_column("Power", justify="center")
+
+        # Populate the table with Pokémon data
+        for idx, pokemon in enumerate(player.pokemons):
+            table.add_row(
+                str(idx),
+                str(pokemon[0]),
+                str(pokemon[1]),
+                str(pokemon[2])
+            )
+
+        # Print the table to the console
+        self.console.print(table)
+        return True  # Return True if there are available Pokémon
+
+
+    #✅ Working
+    def choose_battle_pokemon(self, player, player_name):
+        """Handle the display and selection of a Pokémon for battle."""
+        os.system('cls')
+
+        # Display available Pokémon using Rich table
+        if not self.display_player_pokemons(player, player_name):
+            return  # Exit if no Pokémon are available
+
+        while True:
+            try:
+                self.backend.choose_battle_pokemon(player)
+                self.console.print(f"[bold green]You selected {player.current_pokemon[0]} for battle![/bold green]")
+                break  # Exit loop on successful selection
+
+            except ValueError as e:
+                self.console.print(f"[bold red]Error: {e}. Please enter a valid number.[/bold red]")
+
+        time.sleep(2)
+
+
     #✅ Working
     def display_pokemon_array(self):
         """Display the Pokémon array from backend using a rich table."""
@@ -81,12 +133,14 @@ class Frontend:
 
                 # Display the selected Pokémon
                 self.display_selected_pokemon(player)
+                time.sleep(2)
 
                 break  # Exit loop on successful selection
 
             except ValueError as e:
                 self.console.print(f"[bold red]Invalid input:[/bold red] {e}. Please try again.")
                 time.sleep(3)
+
 
     #✅ Working
     def display_selected_pokemon(self, player):
@@ -142,10 +196,12 @@ class Frontend:
         time.sleep(10)
         os._exit(0)  # Exit the game
 
+
+
 # Example usage
 if __name__ == "__main__":
     f = Frontend()
     f.player_pokemon_selection(f.player, max_pick=4, restricted_pick=False)
-    
+    f.choose_battle_pokemon(f.player)
     
 
