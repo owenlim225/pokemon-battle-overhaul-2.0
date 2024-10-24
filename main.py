@@ -1,3 +1,4 @@
+v4.0-(stable-ver)
 import time, os, random
 import numpy as np
 import pandas as pd
@@ -442,3 +443,4 @@ if __name__ == "__main__":
 
     # print(f"Available pokemons", _game.pokemon_array)
     
+
