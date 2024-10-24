@@ -16,7 +16,7 @@ class Frontend:
 
         self.console = Console()
 
-    # 🟧 Not tested yet
+    #✅ Working
     def display_pokemon_array(self):
         """Display the Pokémon array from backend using a rich table."""
         # Create a rich table with a heavy border
