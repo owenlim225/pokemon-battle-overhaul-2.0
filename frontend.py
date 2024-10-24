@@ -41,35 +41,68 @@ class Frontend:
         self.console.print(Align.center(table))
 
 
-    # 🟧 Not tested yet
-    def player_pokemon_selection(self, player, max_pick, restricted_pick=False):
-        """Wrap backend's player_pokemon_selection with rich display."""
+    #✅ Working
+    def player_pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: 
+        """Handle player Pokémon selection with backend logic."""
         while True:
             try:
                 os.system('cls')
 
-                # Display available Pokémon
+                # Display the available Pokémon
                 self.display_pokemon_array()
 
-                # Get input from player
+                # Get input from player (space-separated indexes)
                 player_picks = list(map(int, input(f"Pick from 1 to {max_pick} Pokémon: ").split()))
 
-                # Call the backend selection logic
-                self.backend.player_pokemon_selection(player, max_pick, restricted_pick)
 
-                # Display selected Pokémon using rich
-                table = Table(title="Selected Pokémon", border_style="blue", show_lines=True)
-                table.add_column("Name", justify="center")
+                # Validate the number of picks
+                if restricted_pick and len(player_picks) != max_pick:
+                    error_message = Text(f"You must pick exactly {max_pick} Pokémon. Try again.", style="red")
+                    self.console.print(error_message)
+                    time.sleep(2)
+                    continue
 
-                for pokemon in player.pokemons:
-                    table.add_row(str(pokemon[0]))
+                if not restricted_pick and not (1 <= len(player_picks) <= max_pick):
+                    error_message = Text(f"You must pick between 1 and {max_pick} Pokémon. Try again.", style="red")
+                    self.console.print(error_message)
+                    time.sleep(2)
+                    continue
 
-                self.console.print(table)
-                break  # Exit loop on success
+                # Validate if all selected indexes are within the valid range
+                if any(pick < 0 or pick >= len(self.backend.pokemon_array) for pick in player_picks):
+                    error_message = Text("One or more picks are out of range. Try again.", style="red")
+                    self.console.print(error_message)
+                    time.sleep(2)
+                    continue
+
+
+                # Call backend to handle selection logic
+                self.backend.player_pokemon_selection(player, player_picks)
+
+                # Display the selected Pokémon
+                self.display_selected_pokemon(player)
+
+                break  # Exit loop on successful selection
 
             except ValueError as e:
                 self.console.print(f"[bold red]Invalid input:[/bold red] {e}. Please try again.")
                 time.sleep(3)
+
+    #✅ Working
+    def display_selected_pokemon(self, player):
+        """Display the player's selected Pokémon with green names."""
+        # Start the message with "Player 1 Selected Pokémon: " in white
+        message = Text("Player 1 Selected Pokémon: ", style="white")
+
+        # Append each Pokémon name in green, separated by commas
+        for idx, pokemon in enumerate(player.pokemons):
+            message.append(f"{pokemon[0]}", style="green")
+            if idx < len(player.pokemons) - 1:  # Add a comma if not the last Pokémon
+                message.append(", ", style="white")
+
+        # Print the styled message to the console
+        self.console.print(message)
+
 
     #✅ Working
     def display_battle_summary(self):
@@ -112,4 +145,7 @@ class Frontend:
 # Example usage
 if __name__ == "__main__":
     f = Frontend()
-    f.display_pokemon_array()
+    f.player_pokemon_selection(f.player, max_pick=4, restricted_pick=False)
+    
+    
+

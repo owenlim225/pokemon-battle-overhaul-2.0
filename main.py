@@ -1,10 +1,11 @@
 import time, os
 from backend import Backend, Player
-from frontend import Frontend
+from rich.console import Console
 
 class Gameplay:
     def __init__(self) -> None:
         self.backend = Backend()
+        self.console = Console()
 
         # Players 
         self.player_1 = Player()
