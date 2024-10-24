@@ -1,16 +1,75 @@
 import time, os
-from backend import Backend
+from backend import Backend, Player
+
 
 from rich.text import Text
 from rich.console import Console
 from rich.table import Table
+from rich.align import Align
 from rich.box import HEAVY  # Import correct box type
 
 class Frontend:
     def __init__(self):
         # Initialize backend and console
         self.backend = Backend()
+        self.player = Player()
+
         self.console = Console()
+
+    # 🟧 Not tested yet
+    def display_pokemon_array(self):
+        """Display the Pokémon array from backend using a rich table."""
+        # Create a rich table with a heavy border
+        table = Table(border_style="bold white", box=HEAVY, title="Available Pokémon")
+
+        # Add columns for the Pokémon attributes
+        table.add_column("Index", justify="center")
+        table.add_column("Name", justify="center")
+        table.add_column("Health", justify="center")
+        table.add_column("Power", justify="center")
+
+        # Populate the table with Pokémon data from backend
+        for idx, pokemon in enumerate(self.backend.pokemon_array):
+            table.add_row(
+                str(idx),  # Index
+                str(pokemon[0]),  # Name
+                str(pokemon[1]),  # Health
+                str(pokemon[2]),  # Power
+            )
+
+        # Print the table center-aligned
+        self.console.print(Align.center(table))
+
+
+    # 🟧 Not tested yet
+    def player_pokemon_selection(self, player, max_pick, restricted_pick=False):
+        """Wrap backend's player_pokemon_selection with rich display."""
+        while True:
+            try:
+                os.system('cls')
+
+                # Display available Pokémon
+                self.display_pokemon_array()
+
+                # Get input from player
+                player_picks = list(map(int, input(f"Pick from 1 to {max_pick} Pokémon: ").split()))
+
+                # Call the backend selection logic
+                self.backend.player_pokemon_selection(player, max_pick, restricted_pick)
+
+                # Display selected Pokémon using rich
+                table = Table(title="Selected Pokémon", border_style="blue", show_lines=True)
+                table.add_column("Name", justify="center")
+
+                for pokemon in player.pokemons:
+                    table.add_row(str(pokemon[0]))
+
+                self.console.print(table)
+                break  # Exit loop on success
+
+            except ValueError as e:
+                self.console.print(f"[bold red]Invalid input:[/bold red] {e}. Please try again.")
+                time.sleep(3)
 
     #✅ Working
     def display_battle_summary(self):
@@ -29,6 +88,7 @@ class Frontend:
 
         # Print the table using rich
         self.console.print(table)
+
 
     #✅ Working
     def end_game(self) -> None:
@@ -51,5 +111,5 @@ class Frontend:
 
 # Example usage
 if __name__ == "__main__":
-    frontend = Frontend()
-    frontend.end_game()
+    f = Frontend()
+    f.display_pokemon_array()

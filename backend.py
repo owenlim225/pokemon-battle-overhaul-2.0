@@ -240,7 +240,6 @@ class Backend:
                 print(self.pokemon_array)
 
                 # Get input from player (space-separated indexes)
-
                 player_picks = list(map(int, input(f"Pick from 1 to {max_pick} Pokémon: ").split()))
 
                 # Validate the number of picks
