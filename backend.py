@@ -24,11 +24,23 @@ class Backend:
 
         # Initialize a battle summary DataFrame
         self.battle_summary = pd.DataFrame(columns=[
-            "Player 1 Pokemon", "Player 1 Health", "Player 1 Power",
-            "Player 2 Pokemon", "Player 2 Health", "Player 2 Power",
+            "Player 1 Pokemon", "Health", "Power",
+            "Player 2 Pokemon", "Health", "Power",
             "Winner"
         ])
 
+    # ===============================Debugger===============================
+    #     self.add_sample_data()
+
+    # def add_sample_data(self):
+    #     sample_data = [
+    #         ["Pikachu", 35, 55, "Charmander", 39, 52, "Pikachu"],
+    #         ["Squirtle", 44, 48, "Bulbasaur", 45, 49, "Bulbasaur"]
+    #     ]
+    #     for row in sample_data:
+    #         self.battle_summary.loc[len(self.battle_summary)] = row
+    
+    # ======================================================================
 
         self.pokemon_array = np.array([
                 # Name         Health  Power Lvl   blessing
