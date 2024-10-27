@@ -6,7 +6,7 @@ from rich.text import Text
 from rich.console import Console
 from rich.table import Table
 from rich.align import Align
-from rich.box import HEAVY  # Import correct box type
+from rich.box import HEAVY
 
 class Frontend:
     def __init__(self):
@@ -16,6 +16,23 @@ class Frontend:
 
         self.console = Console()
 
+    #✅ Working
+    def display_battle_summary(self):
+        battle_summary = self.backend.get_battle_summary()
+
+        # Create a rich table with a heavy border
+        table = Table(border_style="bold white", box=HEAVY)  # Use HEAVY correctly
+
+        # Add columns to the table
+        for column in battle_summary.columns:
+            table.add_column(column, justify="center")
+
+        # Add rows to the table (if any)
+        for _, row in battle_summary.iterrows():
+            table.add_row(*[str(item) for item in row])
+
+        # Print the table using rich
+        self.console.print(table)
 
     #✅ Working
     def display_player_pokemons(self, player, player_name):
@@ -160,11 +177,10 @@ class Frontend:
 
     #✅ Working
     def display_battle_summary(self):
-        battle_summary = self.backend.battle_summary
+        battle_summary = self.backend.get_battle_summary()
 
         # Create a rich table with a heavy border
-        table = Table(border_style="bold white", box=HEAVY)  # Use HEAVY correctly
-
+        table = Table(border_style="bold white", box=HEAVY) 
         # Add columns to the table
         for column in battle_summary.columns:
             table.add_column(column, justify="center")
@@ -198,10 +214,13 @@ class Frontend:
 
 
 
-# Example usage
+# Debugging
 if __name__ == "__main__":
     f = Frontend()
-    f.player_pokemon_selection(f.player, max_pick=4, restricted_pick=False)
-    f.choose_battle_pokemon(f.player)
+    f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 1")
+    f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 2")
+    f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 3")
+    f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 4")
     
+    f.end_game()
 

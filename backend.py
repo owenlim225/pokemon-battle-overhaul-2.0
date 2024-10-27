@@ -1,7 +1,12 @@
+#🟧🟧🟧 Not yet tested
+
 import time, os, random
 import numpy as np
 import pandas as pd
 
+from rich.box import HEAVY
+from rich.table import Table
+from rich.console import Console
 
 class Player:
     def __init__(self) -> None:
@@ -21,22 +26,24 @@ class Player:
 class Backend:
     #✅ Working
     def __init__(self) -> None:
+        self.console = Console()
+
         self.battle_count = 0
 
         # Initialize a battle summary DataFrame
         self.battle_summary = pd.DataFrame(columns=[
-            "Player 1 Pokemon", "Player 1 Health", "Player 1 Power",
-            "Player 2 Pokemon", "Player 2 Health", "Player 2 Power",
+            "Player 1 Pokemon", "Health", "Power",
+            "Player 2 Pokemon", "Health", "Power",
             "Winner"
         ])
 
-    # =============================🐞Debugger===============================
-    #     self.add_sample_data()
-
+    # =============================🐞 Unit testing===============================
+        # self.add_sample_data()
+        
     # def add_sample_data(self):
     #     sample_data = [
-    #         ["Pikachu", 35, 55, "Charmander", 39, 52, "Pikachu"],
-    #         ["Squirtle", 44, 48, "Bulbasaur", 45, 49, "Bulbasaur"],
+    #         ["Pikachu", 35, 55, "Charmander", 39, 52, "Player 1"],
+    #         ["Squirtle", 44, 48, "Bulbasaur", 45, 49, "Player 2"],
     #     ]
     #     for row in sample_data:
     #         self.battle_summary.loc[len(self.battle_summary)] = row
@@ -65,21 +72,23 @@ class Backend:
         player1_data = player1_pokemon.copy()
         player2_data = player2_pokemon.copy()
 
-        new_entry = pd.DataFrame([{
-            "Player 1 Pokemon": player1_data[0],
-            "Player 1 Health":  player1_data[1],
-            "Player 1 Power":   player1_data[2],
-            "Player 2 Pokemon": player2_data[0],
-            "Player 2 Health":  player2_data[1],
-            "Player 2 Power":   player2_data[2],
-            "Winner":           winner
-        }])
+         # Create a new entry as a list
+        new_entry = [
+            player1_data[0], player1_data[1], player1_data[2],  # Player 1 data
+            player2_data[0], player2_data[1], player2_data[2],  # Player 2 data
+            winner  # Winner of the battle
+        ]
 
-        # Concatenate the new entry to the existing battle summary
-        self.battle_summary = pd.concat([self.battle_summary, new_entry], ignore_index=True)
+        # Add the new entry to the battle summary
+        self.battle_summary.loc[len(self.battle_summary)] = new_entry
 
-        # Increment battle count
+        # Increment the battle count
         self.battle_count += 1
+
+    #✅ Working
+    def get_battle_summary(self) -> pd.DataFrame:
+        # Returns the current battle summary.
+        return self.battle_summary
 
 
     #✅ Working
@@ -156,6 +165,11 @@ class Backend:
             print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
             print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
 
+            # Adjust health permanently (in-place)
+            player_1.current_pokemon[1] += 5  # Increase health of the winning Pokémon
+            player_2.current_pokemon[1] = max(0, player_2.current_pokemon[1] - 10)
+            
+
         # Player 2 wins
         elif int(player_1.current_pokemon[2]) < int(player_2.current_pokemon[2]):
             print(f"          {player_1.current_pokemon[2]} < {player_2.current_pokemon[2]}")
@@ -170,6 +184,10 @@ class Backend:
             print("Health")
             print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
             print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
+            
+            # Adjust health permanently (in-place)
+            player_1.current_pokemon[1] = max(0, player_1.current_pokemon[1] - 10)
+            player_2.current_pokemon[1] += 5  # Increase health of the winning Pokémon
             
 
         # Draw
@@ -291,5 +309,6 @@ class Backend:
         time.sleep(3)
         os.system('cls')
 
-
-    
+# if __name__ == "__main__":
+#     backend = Backend()
+#     (print(backend.display_battle_summary()))

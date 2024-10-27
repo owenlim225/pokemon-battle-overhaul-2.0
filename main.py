@@ -56,9 +56,9 @@ class Gameplay:
 
             # Start of battle
             print(f"\nPreparing battle {self.backend.battle_count}...\n")
-            time.sleep(2)
+            time.sleep(3)
             os.system('cls')
-            time.sleep(5)
+
 
             #✅ Working
             # Execute the battle and apply fatigue adjustments
