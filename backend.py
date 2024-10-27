@@ -25,8 +25,8 @@ class Backend:
 
         # Initialize a battle summary DataFrame
         self.battle_summary = pd.DataFrame(columns=[
-            "Player 1 Pokemon", "Health", "Power",
-            "Player 2 Pokemon", "Health", "Power",
+            "Player 1 Pokemon", "Player 1 Health", "Player 1 Power",
+            "Player 2 Pokemon", "Player 2 Health", "Player 2 Power",
             "Winner"
         ])
 

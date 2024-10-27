@@ -51,8 +51,8 @@ class Gameplay:
 
             #✅ Working
             # Apply potion or poison effects
-            self.frontend.potion_or_poison(self.player_1)
-            self.frontend.potion_or_poison(self.player_2)
+            self.backend.potion_or_poison(self.player_1)
+            self.backend.potion_or_poison(self.player_2)
 
             # Start of battle
             print(f"\nPreparing battle {self.backend.battle_count}...\n")
