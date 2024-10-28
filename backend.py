@@ -166,8 +166,8 @@ class Backend:
             print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
 
             # Adjust health permanently (in-place)
-            player_1.current_pokemon[1] += 5  # Increase health of the winning Pokémon
-            player_2.current_pokemon[1] = max(0, player_2.current_pokemon[1] - 10)
+            player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5  # Increase health of the winning Pokémon
+            player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
             
 
         # Player 2 wins
@@ -186,8 +186,8 @@ class Backend:
             print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
             
             # Adjust health permanently (in-place)
-            player_1.current_pokemon[1] = max(0, player_1.current_pokemon[1] - 10)
-            player_2.current_pokemon[1] += 5  # Increase health of the winning Pokémon
+            player_1.current_pokemon[1] = max(0, int(player_1.current_pokemon[1]) - 10)
+            player_2.current_pokemon[1] = int(player_2.current_pokemon[1]) + 5  # Increase health of the winning Pokémon
             
 
         # Draw

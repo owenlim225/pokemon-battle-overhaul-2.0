@@ -36,7 +36,7 @@ class Frontend:
 
     #✅ Working
     def display_player_pokemons(self, player, player_name):
-        """Display the player's available Pokémon using a rich table."""
+        # Display the player's available Pokémon using a rich table
         if player.pokemons.size == 0:
             self.console.print("[bold red]You have no available Pokémon to select.[/bold red]")
             return False  # Return if no Pokémon are available
@@ -66,7 +66,7 @@ class Frontend:
 
     #✅ Working
     def choose_battle_pokemon(self, player, player_name):
-        """Handle the display and selection of a Pokémon for battle."""
+        # Handle the display and selection of a Pokémon for battle
         os.system('cls')
 
         # Display available Pokémon using Rich table
@@ -87,7 +87,7 @@ class Frontend:
 
     #✅ Working
     def display_pokemon_array(self):
-        """Display the Pokémon array from backend using a rich table."""
+        # Display the Pokémon array from backend using a rich table
         # Create a rich table with a heavy border
         table = Table(border_style="bold white", box=HEAVY, title="Available Pokémon")
 
@@ -112,7 +112,7 @@ class Frontend:
 
     #✅ Working
     def player_pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: 
-        """Handle player Pokémon selection with backend logic."""
+        # Handle player Pokémon selection with backend logic
         while True:
             try:
                 os.system('cls')
@@ -161,7 +161,7 @@ class Frontend:
 
     #✅ Working
     def display_selected_pokemon(self, player):
-        """Display the player's selected Pokémon with green names."""
+        # Display the player's selected Pokémon with green names
         # Start the message with "Player 1 Selected Pokémon: " in white
         message = Text("Player 1 Selected Pokémon: ", style="white")
 
@@ -195,7 +195,7 @@ class Frontend:
 
     #✅ Working
     def end_game(self) -> None:
-        """Handle game end and display the battle summary."""
+        # Handle game end and display the battle summary
         os.system('cls')
 
         # Display game end message with green text
@@ -215,12 +215,12 @@ class Frontend:
 
 
 # Debugging
-if __name__ == "__main__":
-    f = Frontend()
-    f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 1")
-    f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 2")
-    f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 3")
-    f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 4")
+# if __name__ == "__main__":
+#     f = Frontend()
+#     f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 1")
+#     f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 2")
+#     f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 3")
+#     f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 4")
     
-    f.end_game()
+#     f.end_game()
 
