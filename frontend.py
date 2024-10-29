@@ -17,11 +17,9 @@ class Frontend:
         self.console = Console()
 
     #✅ Working
-    def display_battle_summary(self):
-        battle_summary = self.backend.get_battle_summary()
-
+    def display_battle_summary(self, battle_summary):
         # Create a rich table with a heavy border
-        table = Table(border_style="bold white", box=HEAVY)  # Use HEAVY correctly
+        table = Table(border_style="bold white", box=HEAVY)
 
         # Add columns to the table
         for column in battle_summary.columns:
@@ -63,7 +61,6 @@ class Frontend:
         self.console.print(table)
         return True  # Return True if there are available Pokémon
 
-
     #✅ Working
     def choose_battle_pokemon(self, player, player_name):
         # Handle the display and selection of a Pokémon for battle
@@ -83,7 +80,6 @@ class Frontend:
                 self.console.print(f"[bold red]Error: {e}. Please enter a valid number.[/bold red]")
 
         time.sleep(2)
-
 
     #✅ Working
     def display_pokemon_array(self):
@@ -108,7 +104,6 @@ class Frontend:
 
         # Print the table center-aligned
         self.console.print(Align.center(table))
-
 
     #✅ Working
     def player_pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: 
@@ -158,7 +153,6 @@ class Frontend:
                 self.console.print(f"[bold red]Invalid input:[/bold red] {e}. Please try again.")
                 time.sleep(3)
 
-
     #✅ Working
     def display_selected_pokemon(self, player):
         # Display the player's selected Pokémon with green names
@@ -174,25 +168,6 @@ class Frontend:
         # Print the styled message to the console
         self.console.print(message)
 
-
-    #✅ Working
-    def display_battle_summary(self):
-        battle_summary = self.backend.get_battle_summary()
-
-        # Create a rich table with a heavy border
-        table = Table(border_style="bold white", box=HEAVY) 
-        # Add columns to the table
-        for column in battle_summary.columns:
-            table.add_column(column, justify="center")
-
-        # Add rows to the table (if any)
-        for _, row in battle_summary.iterrows():
-            table.add_row(*[str(item) for item in row])
-
-        # Print the table using rich
-        self.console.print(table)
-
-
     #✅ Working
     def end_game(self) -> None:
         # Handle game end and display the battle summary
@@ -203,7 +178,7 @@ class Frontend:
         self.console.print(end_message)
 
         # Display battle summary
-        self.display_battle_summary()
+        self.display_battle_summary(self.backend.get_battle_summary())
 
         # Print a thank-you message in green
         thank_you_message = Text("\n\n\t\t\t\tThank you for playing!\n\n\n\n", style="green")

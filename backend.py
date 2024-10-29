@@ -28,6 +28,13 @@ class Backend:
     def __init__(self) -> None:
         self.console = Console()
 
+
+        # Players 
+        self.player_1 = Player()
+        self.player_2 = Player()
+
+
+
         self.battle_count = 0
 
         # Initialize a battle summary DataFrame
@@ -67,7 +74,7 @@ class Backend:
 
     #✅ Working
     def add_battle(self, player1_pokemon, player2_pokemon, winner):
-        """Adds a battle entry to the summary."""
+        # Adds a battle entry to the summary
         # Create a copy of the Pokémon data to avoid changes affecting the record
         player1_data = player1_pokemon.copy()
         player2_data = player2_pokemon.copy()
@@ -93,7 +100,7 @@ class Backend:
 
     #✅ Working
     def prompt_pokemon_change(self, player, player_name) -> bool:
-        """Prompts the player to change their battle Pokémon. Returns True if changed, False otherwise."""
+        # Prompts the player to change their battle Pokémon. Returns True if changed, False otherwise
         try:
             user_choice = input(f"{player_name}: Would you like to change your battle Pokémon? [Y/N]: ").strip().lower()
             if user_choice not in ["y", "n"]:
@@ -112,7 +119,7 @@ class Backend:
 
     #✅ Working
     def change_battle_pokemon(self, player) -> None:
-        """Allows the player to swap their current battle Pokémon with one from their available Pokémon."""
+        # Allows the player to swap their current battle Pokémon with one from their available Pokémon
         try:
             # Display the available Pokémon with their indexes
             print("Available Pokémon:")
@@ -196,6 +203,7 @@ class Backend:
             print(f"\n\nIt's a draw!\n\n")
             winner = "Draw"
 
+        # Add battle to pd frame
         self.add_battle( player_1.current_pokemon, player_2.current_pokemon, winner)
        
 
@@ -251,7 +259,7 @@ class Backend:
 
     #✅ Working
     def player_pokemon_selection(self, player, player_picks):
-        """Process player Pokémon selection."""
+        # Process player Pokémon selection
         # Extract selected Pokémon based on player picks
         selected_pokemon = self.pokemon_array[np.array(player_picks), :]
 
@@ -270,7 +278,7 @@ class Backend:
 
     #✅ Working
     def choose_battle_pokemon(self, player) -> None:
-        """Process the player's selection of a Pokémon for battle."""
+        # Process the player's selection of a Pokémon for battle
         if player.pokemons.size == 0:
             print("You have no available Pokémon to select.")
             return  # Exit if no Pokémon are available
@@ -306,7 +314,7 @@ class Backend:
         print("Both of your pokémons feel fatigued. Both lost 2 health points...")
         print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
         print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
-        time.sleep(3)
+        time.sleep(2)
         os.system('cls')
 
 # if __name__ == "__main__":

@@ -9,9 +9,11 @@ class Gameplay:
         self.frontend = Frontend()
         self.console = Console()
 
-        # Players 
         self.player_1 = Player()
         self.player_2 = Player()
+
+
+
 
     #✅ Working
     def run(self) -> None:
@@ -63,9 +65,9 @@ class Gameplay:
             #✅ Working
             # Execute the battle and apply fatigue adjustments
             self.backend.pokemon_battle(self.player_1, self.player_2)  # Main battle
-            time.sleep(7)
+            time.sleep(3)
             self.backend.fatigue_factor(self.player_1, self.player_2)  # Fatigue adjustments
-            time.sleep(5)
+            time.sleep(3)
 
             # ===============================Debugger===============================
             # print("debug\nself.player_1.used_pokemons", self.player_1.used_pokemons)
