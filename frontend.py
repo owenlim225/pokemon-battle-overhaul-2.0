@@ -5,6 +5,7 @@ from backend import Backend
 
 from rich.text import Text
 from rich.console import Console
+from rich.panel import Panel
 from rich.table import Table
 from rich.align import Align
 from rich.box import HEAVY
@@ -14,42 +15,82 @@ class Frontend:
         self.backend = backend  # Use shared backend
         self.console = Console()
 
-    #🟧🟧🟧 Not yet tested
-    def potion_or_poison_display(self, player, backend):
+    #✅ Working
+    def potion_or_poison_display(self, player, player_name, backend):
         """Handles the frontend display for potion or poison interaction with the player."""
-        # Call the backend calculation to get blessing value
         rand_val = backend.potion_or_poison_calculation(player)
 
-        print(f"\n👼 Your {player.current_pokemon[0]} received {rand_val} blessings!!")
+        def print_panel(message, title, style, width_fraction=2):
+            """Helper function to create and print a styled panel."""
+            console_width = self.console.size.width // width_fraction
+            aligned_message = Align.center(message)
+            panel = Panel(
+                aligned_message,
+                title=title,
+                style=style,
+                border_style=style,
+                width=console_width,
+                padding=(1, 1)
+            )
+            self.console.print(panel, justify="left")
 
-        print("\n🧙 asked if you want to trade your blessings for a random effect.\n")
+        # Blessing message
+        message = f"[white]      An 👼 blessed your pokemon!\nYour [bold green]{player.current_pokemon[0]}[/bold green] received [/white][bold]{rand_val} blessings![/bold]"
+        print_panel(message, f"{player_name} Blessings!", "yellow")
+
+        self.console.print("\n🧙: Would you like to trade your [bold yellow]blessings[/bold yellow] for a [bold purple]random effect?[/bold purple]\n")
+
         try:
             user_choice = input("[Y/N]: ").strip().lower()
             if user_choice not in ["y", "n"]:
                 raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
 
-            if user_choice == "y":
-                print("\n🧙 casted a spell...")
-                if random.choice(["poison", "potion"]) == "poison":
-                    new_power = max(0, int(player.current_pokemon[2]) - rand_val)
-                    print(f"\nYour blessing turned into poison! {player.current_pokemon[0]} lost power!")
-                    print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
-                    player.current_pokemon[2] = new_power
-                else:
-                    new_power = int(player.current_pokemon[2]) + rand_val
-                    print(f"\nYour blessing turned into potion! {player.current_pokemon[0]} gained power!")
-                    print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
-                    player.current_pokemon[2] = new_power
+            os.system('cls')
 
-                # Reset blessing value after use
+            if user_choice == "y":
+                print_panel("[bold]🧙 casted a [purple]spell...[/purple][/bold]", "✨Random Effect✨", "blue")
+                time.sleep(2)
+
+                # Determine if the effect is poison or potion
+                effect = random.choice(["poison", "potion"])
+                new_power = max(0, int(player.current_pokemon[2]) + (rand_val if effect == "potion" else -rand_val))
+                
+                # Prepare the effect panel message with correct markup
+                effect_title = "💔Poison💔" if effect == "poison" else "💚Potion💚"
+                if effect == "poison":
+                    effect_message = (
+                        f"Your blessing turned into [bold red]poison![/bold red] {player.current_pokemon[0]} lost power!"
+                    )
+                    power_change_message = (
+                        f"{player.current_pokemon[0]}'s power: [bold]{player.current_pokemon[2]}[/bold] -> "
+                        f"[bold red]{new_power}[/bold red]"
+                    )
+                else:
+                    effect_message = (
+                        f"Your blessing turned into [bold green]potion![/bold green] {player.current_pokemon[0]} gained power!"
+                    )
+                    power_change_message = (
+                        f"{player.current_pokemon[0]}'s power: [bold]{player.current_pokemon[2]}[/bold] -> "
+                        f"[bold green]{new_power}[/bold green]"
+                    )
+                player.current_pokemon[2] = new_power
+
+                # Print the effect panel
+                print_panel(f"{effect_message}\n{power_change_message}", effect_title, "red" if effect == "poison" else "green")
+                time.sleep(2)
+
+                # Reset the blessing value
                 player.current_pokemon[3] = 0
-                print(f"\nThe blessing has been used and is now reset to 0.")
+                self.console.print("\n[bold yellow]The blessing has been used and is now reset to 0.[/bold yellow]")
             else:
                 print("\nYou kept your blessings untouched.")
 
+            time.sleep(4)
+            os.system('cls')
+
         except ValueError as e:
             print(f"Error: {e}. Please try again.")
-            self.potion_or_poison_display(player, backend)  # Retry on error
+            self.potion_or_poison_display(player, player_name, backend)  # Retry on error
 
 
     #✅ Working

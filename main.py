@@ -9,13 +9,13 @@ class Gameplay:
 
     #✅ Working
     def loading_text(self, text):
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system('cls')
         for i in range(1, 4):
             sys.stdout.write(f"\r{text}{'.' * i}")  # Overwrites the same line
             sys.stdout.flush()  # Ensures the output is updated immediately
             time.sleep(1)
         time.sleep(1)
-        os.system('cls' if os.name == 'nt' else 'clear')  # Final cle
+        os.system('cls')  # Final cle
         
     #✅ Working
     def run(self) -> None:
@@ -49,8 +49,8 @@ class Gameplay:
 
             #✅ Working
             # Apply potion or poison effects with frontend display and backend logic
-            self.frontend.potion_or_poison_display(self.backend.player_1, self.backend)
-            self.frontend.potion_or_poison_display(self.backend.player_2, self.backend)
+            self.frontend.potion_or_poison_display(self.backend.player_1, "Player 1", self.backend)
+            self.frontend.potion_or_poison_display(self.backend.player_2, "Player 2", self.backend)
 
 
 
