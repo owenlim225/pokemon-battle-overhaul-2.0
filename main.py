@@ -1,7 +1,8 @@
-import time, os
+import time, os, sys
 from backend import Backend, Player
 from frontend import Frontend
 from rich.console import Console
+
 
 class Gameplay:
     def __init__(self, backend: Backend) -> None:
@@ -9,7 +10,16 @@ class Gameplay:
         self.frontend = Frontend(backend)  # Pass same backend to frontend
         self.console = Console()
 
-
+    #✅ Working
+    def loading_text(self, text):
+        os.system('cls' if os.name == 'nt' else 'clear')
+        for i in range(1, 4):
+            sys.stdout.write(f"\r{text}{'.' * i}")  # Overwrites the same line
+            sys.stdout.flush()  # Ensures the output is updated immediately
+            time.sleep(1)
+        time.sleep(1)
+        os.system('cls' if os.name == 'nt' else 'clear')  # Final cle
+        
     #✅ Working
     def run(self) -> None:
         _in_battle = True
@@ -18,16 +28,12 @@ class Gameplay:
         self.frontend.player_pokemon_selection(self.backend.player_1, 4, False)
         self.frontend.player_pokemon_selection(self.backend.player_2, len(self.backend.player_1.pokemons), True)
 
-        print("\nPreparing pokemon...\n")
-        time.sleep(2)
-        os.system('cls')
+        self.loading_text("Preparing pokemon")
 
         #✅ Working
         # Main game loop
         while _in_battle:
-            print("\nPreparing battle...\n")
-            time.sleep(2)
-            os.system('cls')
+            self.loading_text("Preparing battle")
 
             #✅ Working
             if not self.backend.battle_count:
@@ -42,9 +48,7 @@ class Gameplay:
                     print("Player 2 keeps the same Pokémon.")
 
 
-            print("\nPreparing...\n")
-            time.sleep(2)
-            os.system('cls')
+            self.loading_text("Preparing")
 
             #✅ Working
             # Apply potion or poison effects
@@ -52,9 +56,7 @@ class Gameplay:
             self.backend.potion_or_poison(self.backend.player_2)
 
             # Start of battle
-            print(f"\nPreparing battle {self.backend.battle_count}...\n")
-            time.sleep(2)
-            os.system('cls')
+            self.loading_text(f"Preparing battle {self.backend.battle_count}")
 
 
             #✅ Working
