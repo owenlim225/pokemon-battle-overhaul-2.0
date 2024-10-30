@@ -6,9 +6,8 @@ Welcome to the **Pokemon Battle Game**, an interactive command-line game where p
 ---
 ## Snapshots
 ![image](https://github.com/user-attachments/assets/47bbea72-7ad8-4e8a-a0e1-3578ad8f9611)
-![image](https://github.com/user-attachments/assets/c1c612bf-682b-44d0-9504-7d995f23058b)
 ![image](https://github.com/user-attachments/assets/402420bc-994d-4c55-9d34-2abc6551bbca)
-![image](https://github.com/user-attachments/assets/0230f2c5-e59f-4320-9c47-dde5c8693cd7)
+![image](https://github.com/user-attachments/assets/0cd4632d-b0e7-4f5b-86ce-139f1b6b0cd9)
 ![image](https://github.com/user-attachments/assets/c4630c55-e124-4d10-9161-f14309c5a574)
 
 
