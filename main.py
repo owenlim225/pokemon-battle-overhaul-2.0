@@ -4,9 +4,11 @@ from backend import Backend
 from frontend import Frontend
 
 class Gameplay:
+    #✅ Working
     def __init__(self, backend: Backend) -> None:
         self.backend = backend  # Use shared backend
         self.frontend = Frontend(backend)  # Pass same backend to frontend
+
 
     #✅ Working
     def loading_text(self, text):
@@ -17,7 +19,6 @@ class Gameplay:
             time.sleep(1)
         time.sleep(1)
         os.system('cls')  # Final cle
-
 
 
     #✅ Working
@@ -81,6 +82,8 @@ class Gameplay:
 
         #✅ Working
         self.frontend.end_game() # End the game
+
+
 
 if __name__ == "__main__":
     backend_instance = Backend()    
