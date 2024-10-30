@@ -84,6 +84,7 @@ if __name__ == "__main__":
     backend_instance = Backend()    
     _game = Gameplay(backend_instance) 
     _game.run()
+    
 
 
     # frontend = Frontend()

@@ -17,7 +17,7 @@ class Frontend:
         self.console = Console()
 
 
-    #🟧🟧🟧 Not yet tested
+    #✅ Working
     def prompt_pokemon_change(self, player, player_name) -> bool:
         if player.pokemons.size == 0:
             self.console.print(f"[bold red]{player_name}, you have no available Pokemon to change.[/bold red]")
@@ -40,13 +40,13 @@ class Frontend:
                 self.console.print("[bold red]Invalid choice. Please enter 'Y' or 'N'.[/bold red]")
 
 
-    #🟧🟧🟧 Not yet tested
+    #✅ Working
     def pokemon_change_prompt(self):
         for player, name in [(self.backend.player_1, "Player 1"), (self.backend.player_2, "Player 2")]:
             if not self.prompt_pokemon_change(player, name):
                 self.console.print(f"[bold gray italic]{name} keeps the same Pokemon.[/bold gray italic]")
 
-    #🟧🟧🟧 Not yet tested
+    #✅ Working
     def change_battle_pokemon(self, player) -> None:
         # Allows the player to swap their current battle Pokemon with one from their available Pokemon
         try:
