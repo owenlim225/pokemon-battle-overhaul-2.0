@@ -18,28 +18,158 @@ class Frontend:
         self.console = Console()
 
 
+# ================================== Display ==============================================
+
+#✅ Working
+    def print_dual_panel(self, player1_message, player1_title, player1_style, 
+                     player2_message, player2_title, player2_style):
+        # Divide the console into two equal sections
+        console_width = self.console.size.width // 2
+
+        # Create aligned messages for both panels
+        player1_aligned_message = Align.center(player1_message)
+        player2_aligned_message = Align.center(player2_message)
+
+        # Panel for Player 1 with heavy border
+        panel1 = Panel(
+            player1_aligned_message,
+            title=player1_title,
+            style=player1_style,
+            border_style=player1_style,
+            width=console_width,
+            padding=(1, 1),
+            box=HEAVY  # Use heavy border
+        )
+
+        # Panel for Player 2 with heavy border
+        panel2 = Panel(
+            player2_aligned_message,
+            title=player2_title,
+            style=player2_style,
+            border_style=player2_style,
+            width=console_width,
+            padding=(1, 1),
+            box=HEAVY  # Use heavy border
+        )
+
+        # Use a table to align the two panels side by side
+        table = Table.grid(padding=1)
+        table.add_column(justify="center", width=console_width)
+        table.add_column(justify="center", width=console_width)
+        table.add_row(panel1, panel2)
+
+        # Print the table with the two side-by-side panels
+        self.console.print(table)
+
+
+    #✅ Working
+    def print_panel(self, message, title, style, width_fraction=2):
+            # Helper function to create and print a styled panel
+            console_width = self.console.size.width // width_fraction
+            aligned_message = Align.center(message)
+            panel = Panel(
+                aligned_message,
+                title=title,
+                style=style,
+                border_style=style,
+                width=console_width,
+                padding=(1, 1)
+            )
+            self.console.print(panel, justify="left")
+
+
+# =========================================================================================
+
+
 # ==================================== Battle related ====================================
     #✅ Working
     def display_battle_results(self, player_1, player_2, battle_data) -> None:
-        self.console.print("\n\n[bold yellow]Battle start![/bold yellow]\n\n")
-        self.console.print(
-            f"[bold cyan]Player 1[/bold cyan]: {player_1.current_pokemon[0]} vs "
-            f"{player_2.current_pokemon[0]}: [bold cyan]Player 2[/bold cyan]\n"
+        def print_winner(winner_message, border_style):
+            # Helper function to print winner announcement and health update
+            self.console.print(Panel(Align.center(winner_message), title="🏆🏆🏆", border_style=border_style))
+            time.sleep(5)
+            os.system('cls')
+
+            self.console.print(Align.center("Health Update"))
+            self.print_dual_panel(
+                f"[bold green]{player_1.current_pokemon[0]}:[/bold green] [bold white]{battle_data['player_1_original_health']}[/bold white] -> [bold red]{player_1.current_pokemon[1]}[/bold red]",
+                player_1_emoji, "blue",
+                f"[bold green]{player_2.current_pokemon[0]}:[/bold green] [bold white]{battle_data['player_2_original_health']}[/bold white] -> [bold green]{player_2.current_pokemon[1]}[/bold green]",
+                player_2_emoji, "red"
+            )
+
+        # Start battle message
+        self.console.print(Align.center("[bold yellow]Battle start![/bold yellow]", vertical="middle"))
+
+        # Display Pokemon information using dual panels
+        self.print_dual_panel(
+            f"{player_1.current_pokemon[0]}", "[bold]Player 1[/bold]", "blue",
+            f"{player_2.current_pokemon[0]}", "[bold]Player 2[/bold]", "red"
         )
 
+        time.sleep(3)
+        # Determine and print winner or draw
         if battle_data["winner"] == "player 1":
-            self.console.print(f"          {player_1.current_pokemon[2]} > {player_2.current_pokemon[2]}")
-            self.console.print(f"\n\n[bold green]Player 1 wins![/bold green]\n")
-        elif battle_data["winner"] == "player 2":
-            self.console.print(f"          {player_1.current_pokemon[2]} < {player_2.current_pokemon[2]}")
-            self.console.print(f"\n\n[bold green]Player 2 wins![/bold green]\n")
-        else:
-            self.console.print(f"          {player_1.current_pokemon[2]} = {player_2.current_pokemon[2]}")
-            self.console.print(f"\n\n[bold yellow]It's a draw![/bold yellow]\n")
+            self.console.print(
+                Panel(Align.center(f"[bold yellow]{player_1.current_pokemon[2]}[/bold yellow] > {player_2.current_pokemon[2]}"), 
+                border_style="blue")
+            )
+            winner_message = "🏆[bold blue]Player 1[/bold blue] wins!🏆"
+            player_1_emoji, player_2_emoji = "🏆", "🔥"
+        
 
-        self.console.print("\n[bold white]Health Updates[/bold white]")
-        self.console.print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]}")
-        self.console.print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]}")
+        elif battle_data["winner"] == "player 2":
+            self.console.print(
+                Panel(Align.center(f"{player_1.current_pokemon[2]} < [bold yellow]{player_2.current_pokemon[2]}[/bold yellow]"), 
+                border_style="red")
+            )
+            winner_message = "🏆[bold red]Player 2[/bold red] wins!🏆"
+            player_1_emoji, player_2_emoji = "🔥", "🏆"
+        
+
+        else:
+            self.console.print(
+                Panel(Align.center(f"{player_1.current_pokemon[2]} = {player_2.current_pokemon[2]}"), 
+                border_style="yellow")
+            )
+            winner_message = "🔥[bold yellow]It's a draw![/bold yellow]🔥"
+            player_1_emoji = player_2_emoji = "🔥"
+        time.sleep(4)
+
+        # Print winner message and health updates
+        print_winner(winner_message, "yellow")
+        time.sleep(4)
+        
+
+    #✅ Working
+    def fatigue_factor_display(self, player_1, player_2):    
+        # Decrease health of both current Pokemon by 2
+        player_1_health_adjustment = max(0, int(player_1.current_pokemon[1]) - 2)
+        player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 2)
+
+        # Message and style configuration for both players
+        player1_message = f"[bold green]{player_1.current_pokemon[0]}:[/bold green] [bold white]{player_1.current_pokemon[1]}[/bold white] -> [bold red]{player_1_health_adjustment}[/bold red]"
+        player2_message = f"[bold green]{player_2.current_pokemon[0]}:[/bold green] [bold white]{player_2.current_pokemon[1]}[/bold white] -> [bold red]{player_2_health_adjustment}[/bold red]"
+        player1_title = "[bold]Player 1[/bold]"
+        player2_title = "[bold]Player 2[/bold]"
+        player1_style = "blue"
+        player2_style = "red"
+
+        # Display fatigue information using dual panel
+        os.system('cls')
+        self.console.print(Align.center("\nAll pokemons feel [bold red]fatigued...[bold red]", vertical="middle"))
+        self.console.print(Align.center("[italic grey]all pokemon suffered [red]-2 health[/red] points[italic grey]\n", vertical="middle"))
+        self.print_dual_panel(
+            player1_message, player1_title, player1_style,
+            player2_message, player2_title, player2_style
+        )
+
+        # Add delay and clear screen
+        time.sleep(6)
+        os.system('cls')
+
+
+
 
 
     #✅ Working
@@ -58,23 +188,11 @@ class Frontend:
         # Handles the frontend display for potion or poison interaction with the player
         rand_val = self.backend.potion_or_poison_calculation(player)
 
-        def print_panel(message, title, style, width_fraction=2):
-            # Helper function to create and print a styled panel
-            console_width = self.console.size.width // width_fraction
-            aligned_message = Align.center(message)
-            panel = Panel(
-                aligned_message,
-                title=title,
-                style=style,
-                border_style=style,
-                width=console_width,
-                padding=(1, 1)
-            )
-            self.console.print(panel, justify="left")
+        
 
         # Blessing message
         message = f"[white]     An 👼 blessed your pokemon!\nYour [bold green]{player.current_pokemon[0]}[/bold green] received [/white][bold]{rand_val} blessings![/bold]"
-        print_panel(message, f"{player_name} Blessings!", "yellow")
+        self.print_panel(message, f"{player_name} Blessings!", "yellow")
 
         self.console.print("\n🧙: Would you like to trade your [bold yellow]blessings[/bold yellow] for a [bold purple]random effect?[/bold purple]\n")
 
@@ -86,7 +204,7 @@ class Frontend:
             os.system('cls')
 
             if user_choice == "y":
-                print_panel("[bold]🧙 casted a [purple]spell...[/purple][/bold]", "✨Random Effect✨", "blue")
+                self.print_panel("[bold]🧙 casted a [purple]spell...[/purple][/bold]", "✨Random Effect✨", "blue")
                 time.sleep(2)
 
                 # Determine if the effect is poison or potion
@@ -100,7 +218,7 @@ class Frontend:
                         f"Your blessing turned into [bold red]poison![/bold red] {player.current_pokemon[0]} lost power!"
                     )
                     power_change_message = (
-                        f"{player.current_pokemon[0]}'s power: [bold]{player.current_pokemon[2]}[/bold] -> "
+                        f"[bold green]{player.current_pokemon[0]}'s[/bold green] power: [bold]{player.current_pokemon[2]}[/bold] -> "
                         f"[bold red]{new_power}[/bold red]"
                     )
                 else:
@@ -108,13 +226,13 @@ class Frontend:
                         f"Your blessing turned into [bold green]potion![/bold green] {player.current_pokemon[0]} gained power!"
                     )
                     power_change_message = (
-                        f"{player.current_pokemon[0]}'s power: [bold]{player.current_pokemon[2]}[/bold] -> "
+                        f"[bold green]{player.current_pokemon[0]}'s[/bold green] power: [bold]{player.current_pokemon[2]}[/bold] -> "
                         f"[bold green]{new_power}[/bold green]"
                     )
                 player.current_pokemon[2] = new_power
 
                 # Print the effect panel
-                print_panel(f"{effect_message}\n{power_change_message}", effect_title, "white")
+                self.print_panel(f"{effect_message}\n{power_change_message}", effect_title, "white")
                 time.sleep(2)
 
                 # Reset the blessing value
@@ -380,7 +498,7 @@ class Frontend:
 
             # Create a message with available Pokémon and their details
             message = "\n".join(
-                f"[bold white]{i}: {pokemon[0]} "
+                f"[bold white][bold yellow]{i}[/bold yellow]: {pokemon[0]} "
                 f"Health: [bold green]{pokemon[1]}[/bold green], "
                 f"Power: [bold red]{pokemon[2]}[/bold red][/bold white]"
                 for i, pokemon in enumerate(player.pokemons)
