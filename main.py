@@ -24,6 +24,8 @@ class Gameplay:
     #✅ Working
     def run(self) -> None:
         _in_battle = True
+        
+        self.frontend.intro()
 
         # Player Pokémon selection
         self.frontend.player_pokemon_selection(self.backend.player_1, 4, False)
