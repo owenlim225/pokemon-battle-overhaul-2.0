@@ -4,15 +4,10 @@ from frontend import Frontend
 from rich.console import Console
 
 class Gameplay:
-    def __init__(self) -> None:
-        self.backend = Backend()
-        self.frontend = Frontend()
+    def __init__(self, backend: Backend) -> None:
+        self.backend = backend  # Use shared backend
+        self.frontend = Frontend(backend)  # Pass same backend to frontend
         self.console = Console()
-
-        self.player_1 = Player()
-        self.player_2 = Player()
-
-
 
 
     #✅ Working
@@ -20,8 +15,8 @@ class Gameplay:
         _in_battle = True
 
         # Player Pokémon selection
-        self.frontend.player_pokemon_selection(self.player_1, 4, False)
-        self.frontend.player_pokemon_selection(self.player_2, len(self.player_1.pokemons), True)
+        self.frontend.player_pokemon_selection(self.backend.player_1, 4, False)
+        self.frontend.player_pokemon_selection(self.backend.player_2, len(self.backend.player_1.pokemons), True)
 
         print("\nPreparing pokemon...\n")
         time.sleep(2)
@@ -36,14 +31,14 @@ class Gameplay:
 
             #✅ Working
             if not self.backend.battle_count:
-                self.frontend.choose_battle_pokemon(self.player_1, "Player 1")
-                self.frontend.choose_battle_pokemon(self.player_2, "Player 2")
+                self.frontend.choose_battle_pokemon(self.backend.player_1, "Player 1")
+                self.frontend.choose_battle_pokemon(self.backend.player_2, "Player 2")
             else:
                 #✅ Working
                 # Players choose their battle Pokémon
-                if not self.backend.prompt_pokemon_change(self.player_1, "Player 1"):
+                if not self.backend.prompt_pokemon_change(self.backend.player_1, "Player 1"):
                     print("Player 1 keeps the same Pokémon.")
-                if not self.backend.prompt_pokemon_change(self.player_2, "Player 2"):
+                if not self.backend.prompt_pokemon_change(self.backend.player_2, "Player 2"):
                     print("Player 2 keeps the same Pokémon.")
 
 
@@ -53,33 +48,33 @@ class Gameplay:
 
             #✅ Working
             # Apply potion or poison effects
-            self.backend.potion_or_poison(self.player_1)
-            self.backend.potion_or_poison(self.player_2)
+            self.backend.potion_or_poison(self.backend.player_1)
+            self.backend.potion_or_poison(self.backend.player_2)
 
             # Start of battle
             print(f"\nPreparing battle {self.backend.battle_count}...\n")
-            time.sleep(3)
+            time.sleep(2)
             os.system('cls')
 
 
             #✅ Working
             # Execute the battle and apply fatigue adjustments
-            self.backend.pokemon_battle(self.player_1, self.player_2)  # Main battle
-            time.sleep(3)
-            self.backend.fatigue_factor(self.player_1, self.player_2)  # Fatigue adjustments
+            self.backend.pokemon_battle(self.backend.player_1, self.backend.player_2)  # Main battle
+            time.sleep(2)
+            self.backend.fatigue_factor(self.backend.player_1, self.backend.player_2)  # Fatigue adjustments
             time.sleep(3)
 
             # ===============================Debugger===============================
-            # print("debug\nself.player_1.used_pokemons", self.player_1.used_pokemons)
-            # print("len(self.player_1.pokemons)", len(self.player_1.pokemons))
-            # print("self.player_2.used_pokemons", self.player_2.used_pokemons)
-            # print("len(self.player_2.pokemons)", len(self.player_2.pokemons))
+            # print("debug\nself.backend.player_1.used_pokemons", self.backend.player_1.used_pokemons)
+            # print("len(self.backend.player_1.pokemons)", len(self.backend.player_1.pokemons))
+            # print("self.backend.player_2.used_pokemons", self.backend.player_2.used_pokemons)
+            # print("len(self.backend.player_2.pokemons)", len(self.backend.player_2.pokemons))
             # ======================================================================
 
             #✅ Working
             # Check if all Pokémon have been used 
-            if self.player_1.used_pokemons == len(self.player_1.pokemons) and \
-               self.player_2.used_pokemons == len(self.player_2.pokemons):
+            if self.backend.player_1.used_pokemons == len(self.backend.player_1.pokemons) and \
+               self.backend.player_2.used_pokemons == len(self.backend.player_2.pokemons):
                 try:
                     print("All pokemons were used in the battle.\n")
                     user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
@@ -97,9 +92,13 @@ class Gameplay:
                 continue
                     
         #✅ Working
-        # End the game
-        self.frontend.end_game()
+        self.frontend.end_game() # End the game
 
 if __name__ == "__main__":
-    _game = Gameplay()
+    backend_instance = Backend()    
+    _game = Gameplay(backend_instance) 
     _game.run()
+
+
+    # frontend = Frontend()
+    # frontend.end_game()

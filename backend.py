@@ -34,7 +34,6 @@ class Backend:
         self.player_2 = Player()
 
 
-
         self.battle_count = 0
 
         # Initialize a battle summary DataFrame
@@ -45,6 +44,11 @@ class Backend:
         ])
 
     # =============================🐞 Unit testing===============================
+
+        
+
+
+    
         # self.add_sample_data()
         
     # def add_sample_data(self):
@@ -74,29 +78,27 @@ class Backend:
 
     #✅ Working
     def add_battle(self, player1_pokemon, player2_pokemon, winner):
-        # Adds a battle entry to the summary
-        # Create a copy of the Pokémon data to avoid changes affecting the record
+        # print(f"Adding battle: {player1_pokemon[0]} vs {player2_pokemon[0]}, Winner: {winner}")
+        
+        # Create copies to avoid modifying original data
         player1_data = player1_pokemon.copy()
         player2_data = player2_pokemon.copy()
 
-         # Create a new entry as a list
+
+        # Create a new entry as a list
         new_entry = [
             player1_data[0], player1_data[1], player1_data[2],  # Player 1 data
             player2_data[0], player2_data[1], player2_data[2],  # Player 2 data
             winner  # Winner of the battle
         ]
 
-        # Add the new entry to the battle summary
+        # Add the new entry to the battle summary DataFrame
         self.battle_summary.loc[len(self.battle_summary)] = new_entry
 
         # Increment the battle count
         self.battle_count += 1
 
-    #✅ Working
-    def get_battle_summary(self) -> pd.DataFrame:
-        # Returns the current battle summary.
-        return self.battle_summary
-
+    
 
     #✅ Working
     def prompt_pokemon_change(self, player, player_name) -> bool:
@@ -150,7 +152,7 @@ class Backend:
             print(f"Error: {e}. Please try again.")
 
 
-    #✅ Working
+    #🟧🟧🟧 Not yet tested
     def pokemon_battle(self, player_1, player_2) -> None:
         os.system('cls') #clear terminal 
 
@@ -176,6 +178,8 @@ class Backend:
             player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5  # Increase health of the winning Pokémon
             player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
             
+            # Add battle to pd frame
+            self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
 
         # Player 2 wins
         elif int(player_1.current_pokemon[2]) < int(player_2.current_pokemon[2]):
@@ -196,6 +200,8 @@ class Backend:
             player_1.current_pokemon[1] = max(0, int(player_1.current_pokemon[1]) - 10)
             player_2.current_pokemon[1] = int(player_2.current_pokemon[1]) + 5  # Increase health of the winning Pokémon
             
+            # Add battle to pd frame
+            self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
 
         # Draw
         else:
@@ -203,8 +209,10 @@ class Backend:
             print(f"\n\nIt's a draw!\n\n")
             winner = "Draw"
 
-        # Add battle to pd frame
-        self.add_battle( player_1.current_pokemon, player_2.current_pokemon, winner)
+            # Add battle to pd frame
+            self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
+
+        
        
 
     #✅ Working
@@ -317,6 +325,17 @@ class Backend:
         time.sleep(2)
         os.system('cls')
 
-# if __name__ == "__main__":
-#     backend = Backend()
-#     (print(backend.display_battle_summary()))
+if __name__ == "__main__":
+    backend = Backend()
+    player1_pokemon = ["Pikachu", 35, 55]
+    player2_pokemon = ["Charmander", 39, 52]
+    backend.add_battle(player1_pokemon, player2_pokemon, "player1")
+    backend.add_battle(player1_pokemon, player2_pokemon, "player2")
+    backend.add_battle(player1_pokemon, player2_pokemon, "player3")
+    backend.add_battle(player1_pokemon, player2_pokemon, "player4")
+    backend.add_battle(player1_pokemon, player2_pokemon, "player5")
+    backend.add_battle(player1_pokemon, player2_pokemon, "player6")
+    backend.add_battle(player1_pokemon, player2_pokemon, "player7")
+    backend.add_battle(player1_pokemon, player2_pokemon, "player8")
+
+    print(backend.battle_summary)

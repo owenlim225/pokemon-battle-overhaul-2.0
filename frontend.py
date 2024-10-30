@@ -1,3 +1,5 @@
+#🟧🟧🟧 Not yet tested
+
 import time, os
 from backend import Backend, Player
 
@@ -9,11 +11,8 @@ from rich.align import Align
 from rich.box import HEAVY
 
 class Frontend:
-    def __init__(self):
-        # Initialize backend and console
-        self.backend = Backend()
-        self.player = Player()
-
+    def __init__(self, backend: Backend):
+        self.backend = backend  # Use shared backend
         self.console = Console()
 
     #✅ Working
@@ -151,7 +150,7 @@ class Frontend:
 
             except ValueError as e:
                 self.console.print(f"[bold red]Invalid input:[/bold red] {e}. Please try again.")
-                time.sleep(3)
+                time.sleep(2)
 
     #✅ Working
     def display_selected_pokemon(self, player):
@@ -168,24 +167,28 @@ class Frontend:
         # Print the styled message to the console
         self.console.print(message)
 
-    #✅ Working
+    # ✅ Working
     def end_game(self) -> None:
-        # Handle game end and display the battle summary
         os.system('cls')
 
         # Display game end message with green text
         end_message = Text("\t\t\t\t      Battle Summary\n", style="red")
         self.console.print(end_message)
 
-        # Display battle summary
-        self.display_battle_summary(self.backend.get_battle_summary())
+        # Fetch the latest battle summary and display it
+        battle_summary = self.backend.battle_summary
+        if battle_summary.empty:
+            self.console.print("[bold yellow]No battles were recorded.[/bold yellow]")
+        else:
+            self.display_battle_summary(battle_summary)
 
         # Print a thank-you message in green
         thank_you_message = Text("\n\n\t\t\t\tThank you for playing!\n\n\n\n", style="green")
         self.console.print(thank_you_message)
 
         time.sleep(10)
-        os._exit(0)  # Exit the game
+        os._exit(0)
+
 
 
 
