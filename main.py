@@ -1,4 +1,10 @@
 #🟧🟧🟧 Not yet tested
+
+# Module installer
+import pkg_handler
+pkg_handler.initialize_packages()
+
+
 import time, os, sys
 from backend import Backend
 from frontend import Frontend
