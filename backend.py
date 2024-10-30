@@ -65,22 +65,6 @@ class Backend:
 
 
     #✅ Working
-    def potion_or_poison_calculation(self, player):
-            # Calculates the effect of potion or poison on the player's current Pokemon 
-            # Generate blessing value if needed
-            if player.current_pokemon.shape[0] <= 3 or int(player.current_pokemon[3]) == 0:
-                rand_val = random.randint(10, 15)
-                if player.current_pokemon.shape[0] <= 3:
-                    player.current_pokemon = np.append(player.current_pokemon, rand_val)
-                else:
-                    player.current_pokemon[3] = rand_val
-            else:
-                rand_val = int(player.current_pokemon[3])
-            
-            return rand_val  # Return the blessing value to be used in the frontend logic
-
-
-    #✅ Working
     def player_pokemon_selection(self, player, player_picks):
         # Process player Pokemon selection
         # Extract selected Pokemon based on player picks
@@ -98,6 +82,22 @@ class Backend:
         #🐞 Debugger ======================
         # print("debug:", player.pokemons)
         #==================================
+
+
+    #✅ Working
+    def potion_or_poison_calculation(self, player):
+            # Calculates the effect of potion or poison on the player's current Pokemon 
+            # Generate blessing value if needed
+            if player.current_pokemon.shape[0] <= 3 or int(player.current_pokemon[3]) == 0:
+                rand_val = random.randint(10, 15)
+                if player.current_pokemon.shape[0] <= 3:
+                    player.current_pokemon = np.append(player.current_pokemon, rand_val)
+                else:
+                    player.current_pokemon[3] = rand_val
+            else:
+                rand_val = int(player.current_pokemon[3])
+            
+            return rand_val  # Return the blessing value to be used in the frontend logic
 
 
     #✅ Working
@@ -127,13 +127,14 @@ class Backend:
             except ValueError as e:
                 print(f"Invalid input. Error: {e}. Please enter a valid number.")
 
-    #🟧🟧🟧 Not yet tested
+
+    #✅ Working
     def handle_battle(self, player_1, player_2) -> dict:
         if int(player_1.current_pokemon[2]) > int(player_2.current_pokemon[2]):
             winner = "player 1"
             player_1.wins += 1
-            player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5 
-            player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
+            player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5 # 5 points incrase on health of the winner
+            player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10) # 10 points decrease on health of the loser
 
 
         elif int(player_1.current_pokemon[2]) < int(player_2.current_pokemon[2]):
@@ -152,70 +153,6 @@ class Backend:
         }
 
 
-
-
-
-    #✅ Working
-    # def pokemon_battle(self, player_1, player_2) -> None:
-        # os.system('cls') #clear terminal 
-
-        # print("\n\nBattle start!\n\n")
-        # print(f"Player 1: {player_1.current_pokemon[0]} vs {player_2.current_pokemon[0]}: Player 2\n")
-
-        # # Player 1 wins
-        # if int(player_1.current_pokemon[2]) > int(player_2.current_pokemon[2]):
-        #     print(f"          {player_1.current_pokemon[2]} > {player_2.current_pokemon[2]}")
-        #     print(f"\n\nPlayer 1 wins!\n\n")
-        #     player_1.wins += 1
-        #     winner = "player 1"
-
-        #     # Adjust health
-        #     player_1_health_adjustment = int(player_1.current_pokemon[1]) + 5  # Increase health of winning Pokemon
-        #     player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 10)  # Decrease health of losing Pokemon
-
-        #     print("Health")
-        #     print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
-        #     print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
-
-        #     # Adjust health permanently (in-place)
-        #     player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5  # Increase health of the winning Pokemon
-        #     player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
-            
-        #     # Add battle to pd frame
-        #     self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
-
-        # # Player 2 wins
-        # elif int(player_1.current_pokemon[2]) < int(player_2.current_pokemon[2]):
-        #     print(f"          {player_1.current_pokemon[2]} < {player_2.current_pokemon[2]}")
-        #     print(f"\n\nPlayer 2 wins!\n\n")
-        #     player_2.wins += 1
-        #     winner = "player 2"
-
-        #     # Adjust health
-        #     player_1_health_adjustment =  max(0, int(player_1.current_pokemon[1]) - 10)  # Decrease health of losing Pokemon
-        #     player_2_health_adjustment = int(player_2.current_pokemon[1]) + 5  # Increase health of winning Pokemon
-
-        #     print("Health")
-        #     print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
-        #     print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
-            
-        #     # Adjust health permanently (in-place)
-        #     player_1.current_pokemon[1] = max(0, int(player_1.current_pokemon[1]) - 10)
-        #     player_2.current_pokemon[1] = int(player_2.current_pokemon[1]) + 5  # Increase health of the winning Pokemon
-            
-        #     # Add battle to pd frame
-        #     self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
-
-        # # Draw
-        # else:
-        #     print(f"          {player_1.current_pokemon[2]} = {player_2.current_pokemon[2]}")
-        #     print(f"\n\nIt's a draw!\n\n")
-        #     winner = "Draw"
-
-        #     # Add battle to pd frame
-        #     self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
-
-        
     #✅ Working
     def add_battle(self, player1_pokemon, player2_pokemon, winner):
         # print(f"Adding battle: {player1_pokemon[0]} vs {player2_pokemon[0]}, Winner: {winner}")
