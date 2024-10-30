@@ -18,6 +18,8 @@ class Gameplay:
         time.sleep(1)
         os.system('cls')  # Final cle
 
+
+
     #✅ Working
     def run(self) -> None:
         _in_battle = True
@@ -60,7 +62,7 @@ class Gameplay:
 
             #✅ Working
             # Execute the battle and apply fatigue adjustments
-            self.backend.pokemon_battle(self.backend.player_1, self.backend.player_2)  # Main battle
+            self.frontend.pokemon_battle(self.backend.player_1, self.backend.player_2)  # Main battle
             time.sleep(2)
             self.backend.fatigue_factor(self.backend.player_1, self.backend.player_2)  # Fatigue adjustments
             time.sleep(2)
