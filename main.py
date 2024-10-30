@@ -1,5 +1,3 @@
-import time, os
-from backend import Backend, Player
 from frontend import Frontend
 from rich.console import Console
 
@@ -100,5 +98,3 @@ if __name__ == "__main__":
     _game.run()
 
 
-    # frontend = Frontend()
-    # frontend.end_game()
