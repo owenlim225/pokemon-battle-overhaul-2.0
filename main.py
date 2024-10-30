@@ -48,9 +48,10 @@ class Gameplay:
             self.loading_text("Preparing")
 
             #✅ Working
-            # Apply potion or poison effects
-            self.backend.potion_or_poison(self.backend.player_1)
-            self.backend.potion_or_poison(self.backend.player_2)
+            # Apply potion or poison effects with frontend display and backend logic
+            self.frontend.potion_or_poison_display(self.backend.player_1, self.backend)
+            self.frontend.potion_or_poison_display(self.backend.player_2, self.backend)
+
 
 
             # Start of battle

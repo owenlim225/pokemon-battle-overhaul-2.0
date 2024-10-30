@@ -1,6 +1,6 @@
 #🟧🟧🟧 Not yet tested
 
-import time, os
+import time, os, random
 from backend import Backend
 
 from rich.text import Text
@@ -15,6 +15,44 @@ class Frontend:
         self.console = Console()
 
     #🟧🟧🟧 Not yet tested
+    def potion_or_poison_display(self, player, backend):
+        """Handles the frontend display for potion or poison interaction with the player."""
+        # Call the backend calculation to get blessing value
+        rand_val = backend.potion_or_poison_calculation(player)
+
+        print(f"\n👼 Your {player.current_pokemon[0]} received {rand_val} blessings!!")
+
+        print("\n🧙 asked if you want to trade your blessings for a random effect.\n")
+        try:
+            user_choice = input("[Y/N]: ").strip().lower()
+            if user_choice not in ["y", "n"]:
+                raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
+
+            if user_choice == "y":
+                print("\n🧙 casted a spell...")
+                if random.choice(["poison", "potion"]) == "poison":
+                    new_power = max(0, int(player.current_pokemon[2]) - rand_val)
+                    print(f"\nYour blessing turned into poison! {player.current_pokemon[0]} lost power!")
+                    print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
+                    player.current_pokemon[2] = new_power
+                else:
+                    new_power = int(player.current_pokemon[2]) + rand_val
+                    print(f"\nYour blessing turned into potion! {player.current_pokemon[0]} gained power!")
+                    print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
+                    player.current_pokemon[2] = new_power
+
+                # Reset blessing value after use
+                player.current_pokemon[3] = 0
+                print(f"\nThe blessing has been used and is now reset to 0.")
+            else:
+                print("\nYou kept your blessings untouched.")
+
+        except ValueError as e:
+            print(f"Error: {e}. Please try again.")
+            self.potion_or_poison_display(player, backend)  # Retry on error
+
+
+    #✅ Working
     def check_all_pokemons_used(self):
         # Checks if all Pokémon have been used and prompts the user to continue or end the battle.
         if (
@@ -39,12 +77,6 @@ class Frontend:
             return True  # Continue if not all Pokémon are used
 
 
-
-
-
-
-
-
     #✅ Working
     def display_battle_summary(self, battle_summary):
         # Create a rich table with a heavy border
@@ -60,6 +92,7 @@ class Frontend:
 
         # Print the table using rich
         self.console.print(table)
+
 
     #✅ Working
     def display_player_pokemons(self, player, player_name):
@@ -90,6 +123,7 @@ class Frontend:
         self.console.print(table)
         return True  # Return True if there are available Pokémon
 
+
     #✅ Working
     def choose_battle_pokemon(self, player, player_name):
         # Handle the display and selection of a Pokémon for battle
@@ -109,6 +143,7 @@ class Frontend:
                 self.console.print(f"[bold red]Error: {e}. Please enter a valid number.[/bold red]")
 
         time.sleep(2)
+
 
     #✅ Working
     def display_pokemon_array(self):
@@ -133,6 +168,7 @@ class Frontend:
 
         # Print the table center-aligned
         self.console.print(Align.center(table))
+
 
     #✅ Working
     def player_pokemon_selection(self, player, max_pick, restricted_pick=False) -> None: 
@@ -182,6 +218,7 @@ class Frontend:
                 self.console.print(f"[bold red]Invalid input:[/bold red] {e}. Please try again.")
                 time.sleep(2)
 
+
     #✅ Working
     def display_selected_pokemon(self, player):
         # Display the player's selected Pokémon with green names
@@ -196,6 +233,7 @@ class Frontend:
 
         # Print the styled message to the console
         self.console.print(message)
+
 
     # ✅ Working
     def end_game(self) -> None:

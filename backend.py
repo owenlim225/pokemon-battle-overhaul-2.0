@@ -3,6 +3,7 @@ import time, os, random
 import numpy as np
 import pandas as pd
 
+#✅ Working
 class Player:
     def __init__(self) -> None:
         # Array to store Pokemon: (name, power) tuples
@@ -16,6 +17,7 @@ class Player:
         
         # Number of wins
         self.wins = 0
+
 
 
 class Backend:
@@ -63,28 +65,70 @@ class Backend:
 
 
     #✅ Working
-    def add_battle(self, player1_pokemon, player2_pokemon, winner):
-        # print(f"Adding battle: {player1_pokemon[0]} vs {player2_pokemon[0]}, Winner: {winner}")
+    def potion_or_poison_calculation(self, player):
+            """Calculates the effect of potion or poison on the player's current Pokémon."""
+            # Generate blessing value if needed
+            if player.current_pokemon.shape[0] <= 3 or int(player.current_pokemon[3]) == 0:
+                rand_val = random.randint(10, 15)
+                if player.current_pokemon.shape[0] <= 3:
+                    player.current_pokemon = np.append(player.current_pokemon, rand_val)
+                else:
+                    player.current_pokemon[3] = rand_val
+            else:
+                rand_val = int(player.current_pokemon[3])
+            
+            return rand_val  # Return the blessing value to be used in the frontend logic
 
-        # Create copies to avoid modifying original data
-        player1_data = player1_pokemon.copy()
-        player2_data = player2_pokemon.copy()
 
 
-        # Create a new entry as a list
-        new_entry = [
-            player1_data[0], player1_data[1], player1_data[2],  # Player 1 data
-            player2_data[0], player2_data[1], player2_data[2],  # Player 2 data
-            winner  # Winner of the battle
-        ]
+    #✅ Working
+    def player_pokemon_selection(self, player, player_picks):
+        # Process player Pokémon selection
+        # Extract selected Pokémon based on player picks
+        selected_pokemon = self.pokemon_array[np.array(player_picks), :]
 
-        # Add the new entry to the battle summary DataFrame
-        self.battle_summary.loc[len(self.battle_summary)] = new_entry
+        # Add selected Pokémon to the player's collection
+        if player.pokemons.size == 0:
+            player.pokemons = selected_pokemon  # Assign directly if empty
+        else:
+            player.pokemons = np.vstack((player.pokemons, selected_pokemon))
 
-        # Increment the battle count
-        self.battle_count += 1
+        # Remove the selected Pokémon from the original array
+        self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
+        
+        #🐞 Debugger ======================
+        # print("debug:", player.pokemons)
+        #==================================
 
-    
+
+    #✅ Working
+    def choose_battle_pokemon(self, player) -> None:
+        # Process the player's selection of a Pokémon for battle
+        if player.pokemons.size == 0:
+            print("You have no available Pokémon to select.")
+            return  # Exit if no Pokémon are available
+
+        # Get the player's selected Pokémon index
+        while True:
+            try:
+                battle_pick = int(input("Please select your battle Pokémon (index): "))
+
+                # Validate the input index
+                if battle_pick < 0 or battle_pick >= len(player.pokemons):
+                    print("Invalid selection. Please pick one of your available Pokémon.")
+                    continue
+
+                # Assign the selected Pokémon to the player's current Pokémon
+                player.current_pokemon = player.pokemons[battle_pick]
+
+                # Remove the selected Pokémon from the player's available Pokémon
+                player.pokemons = np.delete(player.pokemons, battle_pick, axis=0)
+                break  # Exit loop on successful selection
+
+            except ValueError as e:
+                print(f"Invalid input. Error: {e}. Please enter a valid number.")
+
+
     #✅ Working
     def prompt_pokemon_change(self, player, player_name) -> bool:
         # Prompts the player to change their battle Pokémon. Returns True if changed, False otherwise
@@ -198,103 +242,27 @@ class Backend:
             self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
 
         
-
     #✅ Working
-    def potion_or_poison(self, player) -> None:
-        # Generate or reuse the blessing value
-        if player.current_pokemon.shape[0] <= 3 or int(player.current_pokemon[3]) == 0:
-            rand_val = random.randint(10, 15)
-            if player.current_pokemon.shape[0] <= 3:
-                player.current_pokemon = np.append(player.current_pokemon, rand_val)
-            else:
-                player.current_pokemon[3] = rand_val
-                
-            print(f"\n👼 passed by and gave your {player.current_pokemon[0]} {rand_val} blessings!!")
-        else:
-            rand_val = int(player.current_pokemon[3])
-            print(f"\n👼 saw that your {player.current_pokemon[0]} still has {rand_val} blessings.")
+    def add_battle(self, player1_pokemon, player2_pokemon, winner):
+        # print(f"Adding battle: {player1_pokemon[0]} vs {player2_pokemon[0]}, Winner: {winner}")
 
-        print("\n🧙 asked if you like to trade your blessings for a random effect.\n")
-
-        try:
-            user_choice = input("[Y/N]: ").strip().lower()
-            if user_choice not in ["y", "n"]:
-                raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
-
-            if user_choice == "y":
-                print("\n🧙 casted a spell...")
-
-                # If user agrees, the blessing val of the current pokemon removed. Reduce the power lvl as per choice.           
-                if random.choice(["poison", "potion"]) == "poison":
-                    new_power = max(0, int(player.current_pokemon[2]) - rand_val)
-                    print(f"\nYour blessing turned into poison! Your {player.current_pokemon[0]} lost power!")
-                    print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
-                    player.current_pokemon[2] = new_power
-                
-                # Retain the blessing val and will be asked to be used up again later.
-                else:
-                    new_power = int(player.current_pokemon[2]) + rand_val
-                    print(f"\nYour blessing turned into potion! Your {player.current_pokemon[0]} gained power!")
-                    print(f"{player.current_pokemon[0]}: {player.current_pokemon[2]} -> {new_power}")
-                    player.current_pokemon[2] = new_power
-
-                # Reset the blessing value to 0 after use
-                player.current_pokemon[3] = 0
-                print(f"\nThe blessing has been used and is now reset to 0.")
-
-            else:
-                print("\nYou kept your blessings untouched.")
-
-        except ValueError as e:
-            print(f"Error: {e}. Please try again.")
+        # Create copies to avoid modifying original data
+        player1_data = player1_pokemon.copy()
+        player2_data = player2_pokemon.copy()
 
 
-    #✅ Working
-    def player_pokemon_selection(self, player, player_picks):
-        # Process player Pokémon selection
-        # Extract selected Pokémon based on player picks
-        selected_pokemon = self.pokemon_array[np.array(player_picks), :]
+        # Create a new entry as a list
+        new_entry = [
+            player1_data[0], player1_data[1], player1_data[2],  # Player 1 data
+            player2_data[0], player2_data[1], player2_data[2],  # Player 2 data
+            winner  # Winner of the battle
+        ]
 
-        # Add selected Pokémon to the player's collection
-        if player.pokemons.size == 0:
-            player.pokemons = selected_pokemon  # Assign directly if empty
-        else:
-            player.pokemons = np.vstack((player.pokemons, selected_pokemon))
+        # Add the new entry to the battle summary DataFrame
+        self.battle_summary.loc[len(self.battle_summary)] = new_entry
 
-        # Remove the selected Pokémon from the original array
-        self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
-        
-        #🐞 Debugger ======================
-        # print("debug:", player.pokemons)
-        #==================================
-
-
-    #✅ Working
-    def choose_battle_pokemon(self, player) -> None:
-        # Process the player's selection of a Pokémon for battle
-        if player.pokemons.size == 0:
-            print("You have no available Pokémon to select.")
-            return  # Exit if no Pokémon are available
-
-        # Get the player's selected Pokémon index
-        while True:
-            try:
-                battle_pick = int(input("Please select your battle Pokémon (index): "))
-
-                # Validate the input index
-                if battle_pick < 0 or battle_pick >= len(player.pokemons):
-                    print("Invalid selection. Please pick one of your available Pokémon.")
-                    continue
-
-                # Assign the selected Pokémon to the player's current Pokémon
-                player.current_pokemon = player.pokemons[battle_pick]
-
-                # Remove the selected Pokémon from the player's available Pokémon
-                player.pokemons = np.delete(player.pokemons, battle_pick, axis=0)
-                break  # Exit loop on successful selection
-
-            except ValueError as e:
-                print(f"Invalid input. Error: {e}. Please enter a valid number.")
+        # Increment the battle count
+        self.battle_count += 1
 
 
     #✅ Working
