@@ -127,67 +127,93 @@ class Backend:
             except ValueError as e:
                 print(f"Invalid input. Error: {e}. Please enter a valid number.")
 
+    #🟧🟧🟧 Not yet tested
+    def handle_battle(self, player_1, player_2) -> dict:
+        if int(player_1.current_pokemon[2]) > int(player_2.current_pokemon[2]):
+            winner = "player 1"
+            player_1.wins += 1
+            player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5 
+            player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
+
+
+        elif int(player_1.current_pokemon[2]) < int(player_2.current_pokemon[2]):
+            winner = "player 2"
+            player_2.wins += 1
+            player_2.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5
+            player_1.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
+
+        else:
+            winner = "Draw"
+
+        return {
+            "winner": winner,
+            "player_1_health": player_1.current_pokemon[1],
+            "player_2_health": player_2.current_pokemon[1],
+        }
+
+
+
 
 
     #✅ Working
-    def pokemon_battle(self, player_1, player_2) -> None:
-        os.system('cls') #clear terminal 
+    # def pokemon_battle(self, player_1, player_2) -> None:
+        # os.system('cls') #clear terminal 
 
-        print("\n\nBattle start!\n\n")
-        print(f"Player 1: {player_1.current_pokemon[0]} vs {player_2.current_pokemon[0]}: Player 2\n")
+        # print("\n\nBattle start!\n\n")
+        # print(f"Player 1: {player_1.current_pokemon[0]} vs {player_2.current_pokemon[0]}: Player 2\n")
 
-        # Player 1 wins
-        if int(player_1.current_pokemon[2]) > int(player_2.current_pokemon[2]):
-            print(f"          {player_1.current_pokemon[2]} > {player_2.current_pokemon[2]}")
-            print(f"\n\nPlayer 1 wins!\n\n")
-            player_1.wins += 1
-            winner = "player 1"
+        # # Player 1 wins
+        # if int(player_1.current_pokemon[2]) > int(player_2.current_pokemon[2]):
+        #     print(f"          {player_1.current_pokemon[2]} > {player_2.current_pokemon[2]}")
+        #     print(f"\n\nPlayer 1 wins!\n\n")
+        #     player_1.wins += 1
+        #     winner = "player 1"
 
-            # Adjust health
-            player_1_health_adjustment = int(player_1.current_pokemon[1]) + 5  # Increase health of winning Pokemon
-            player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 10)  # Decrease health of losing Pokemon
+        #     # Adjust health
+        #     player_1_health_adjustment = int(player_1.current_pokemon[1]) + 5  # Increase health of winning Pokemon
+        #     player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 10)  # Decrease health of losing Pokemon
 
-            print("Health")
-            print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
-            print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
+        #     print("Health")
+        #     print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
+        #     print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
 
-            # Adjust health permanently (in-place)
-            player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5  # Increase health of the winning Pokemon
-            player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
+        #     # Adjust health permanently (in-place)
+        #     player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5  # Increase health of the winning Pokemon
+        #     player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
             
-            # Add battle to pd frame
-            self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
+        #     # Add battle to pd frame
+        #     self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
 
-        # Player 2 wins
-        elif int(player_1.current_pokemon[2]) < int(player_2.current_pokemon[2]):
-            print(f"          {player_1.current_pokemon[2]} < {player_2.current_pokemon[2]}")
-            print(f"\n\nPlayer 2 wins!\n\n")
-            player_2.wins += 1
-            winner = "player 2"
+        # # Player 2 wins
+        # elif int(player_1.current_pokemon[2]) < int(player_2.current_pokemon[2]):
+        #     print(f"          {player_1.current_pokemon[2]} < {player_2.current_pokemon[2]}")
+        #     print(f"\n\nPlayer 2 wins!\n\n")
+        #     player_2.wins += 1
+        #     winner = "player 2"
 
-            # Adjust health
-            player_1_health_adjustment =  max(0, int(player_1.current_pokemon[1]) - 10)  # Decrease health of losing Pokemon
-            player_2_health_adjustment = int(player_2.current_pokemon[1]) + 5  # Increase health of winning Pokemon
+        #     # Adjust health
+        #     player_1_health_adjustment =  max(0, int(player_1.current_pokemon[1]) - 10)  # Decrease health of losing Pokemon
+        #     player_2_health_adjustment = int(player_2.current_pokemon[1]) + 5  # Increase health of winning Pokemon
 
-            print("Health")
-            print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
-            print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
+        #     print("Health")
+        #     print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
+        #     print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
             
-            # Adjust health permanently (in-place)
-            player_1.current_pokemon[1] = max(0, int(player_1.current_pokemon[1]) - 10)
-            player_2.current_pokemon[1] = int(player_2.current_pokemon[1]) + 5  # Increase health of the winning Pokemon
+        #     # Adjust health permanently (in-place)
+        #     player_1.current_pokemon[1] = max(0, int(player_1.current_pokemon[1]) - 10)
+        #     player_2.current_pokemon[1] = int(player_2.current_pokemon[1]) + 5  # Increase health of the winning Pokemon
             
-            # Add battle to pd frame
-            self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
+        #     # Add battle to pd frame
+        #     self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
 
-        # Draw
-        else:
-            print(f"          {player_1.current_pokemon[2]} = {player_2.current_pokemon[2]}")
-            print(f"\n\nIt's a draw!\n\n")
-            winner = "Draw"
+        # # Draw
+        # else:
+        #     print(f"          {player_1.current_pokemon[2]} = {player_2.current_pokemon[2]}")
+        #     print(f"\n\nIt's a draw!\n\n")
+        #     winner = "Draw"
 
-            # Add battle to pd frame
-            self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
+        #     # Add battle to pd frame
+        #     self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
 
         
     #✅ Working

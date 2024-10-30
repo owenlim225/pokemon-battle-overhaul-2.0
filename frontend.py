@@ -17,6 +17,50 @@ class Frontend:
         self.console = Console()
 
 
+    #🟧🟧🟧 Not yet tested
+    def display_battle_results(self, player_1, player_2, battle_data) -> None:
+        self.console.print("\n\n[bold yellow]Battle start![/bold yellow]\n\n")
+        self.console.print(
+            f"[bold cyan]Player 1[/bold cyan]: {player_1.current_pokemon[0]} vs "
+            f"{player_2.current_pokemon[0]}: [bold cyan]Player 2[/bold cyan]\n"
+        )
+
+        if battle_data["winner"] == "player 1":
+            self.console.print(f"          {player_1.current_pokemon[2]} > {player_2.current_pokemon[2]}")
+            self.console.print(f"\n\n[bold green]Player 1 wins![/bold green]\n")
+        elif battle_data["winner"] == "player 2":
+            self.console.print(f"          {player_1.current_pokemon[2]} < {player_2.current_pokemon[2]}")
+            self.console.print(f"\n\n[bold green]Player 2 wins![/bold green]\n")
+        else:
+            self.console.print(f"          {player_1.current_pokemon[2]} = {player_2.current_pokemon[2]}")
+            self.console.print(f"\n\n[bold yellow]It's a draw![/bold yellow]\n")
+
+        self.console.print("\n[bold white]Health Updates[/bold white]")
+        self.console.print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]}")
+        self.console.print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]}")
+
+
+    #🟧🟧🟧 Not yet tested
+    def pokemon_battle(self, player_1, player_2) -> None:
+        os.system('cls')  # Clear terminal
+
+        battle_data = self.backend.handle_battle(player_1, player_2)
+        self.display_battle_results(player_1, player_2, battle_data)
+
+        # Log battle in a data frame
+        self.backend.add_battle(player_1.current_pokemon, player_2.current_pokemon, battle_data["winner"])
+        
+
+
+
+
+
+
+
+
+
+
+
     #✅ Working
     def prompt_pokemon_change(self, player, player_name) -> bool:
         if player.pokemons.size == 0:
