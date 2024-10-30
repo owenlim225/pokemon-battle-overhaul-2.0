@@ -130,6 +130,11 @@ class Backend:
 
     #✅ Working
     def handle_battle(self, player_1, player_2) -> dict:
+        # Original health of the player's current pokemon
+        player_1_original_health = player_1.current_pokemon[1]
+        player_2_original_health = player_2.current_pokemon[1]
+
+        # Adjusted health of the player's current pokemon based on the winner
         if int(player_1.current_pokemon[2]) > int(player_2.current_pokemon[2]):
             winner = "player 1"
             player_1.wins += 1
@@ -148,7 +153,9 @@ class Backend:
 
         return {
             "winner": winner,
+            "player_1_original_health": player_1_original_health,
             "player_1_health": player_1.current_pokemon[1],
+            "player_2_original_health": player_2_original_health,
             "player_2_health": player_2.current_pokemon[1],
         }
 
@@ -176,17 +183,17 @@ class Backend:
         self.battle_count += 1
 
 
-    #✅ Working
-    def fatigue_factor(self, player_1, player_2) -> None:
-        # Decrease health of both current Pokemon by 2
-        player_1_health_adjustment = max(0, int(player_1.current_pokemon[1]) - 2)
-        player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 2)
+    # #✅ Working
+    # def fatigue_factor(self, player_1, player_2) -> None:
+    #     # Decrease health of both current Pokemon by 2
+    #     player_1_health_adjustment = max(0, int(player_1.current_pokemon[1]) - 2)
+    #     player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 2)
 
-        print("Both of your pokémons feel fatigued. Both lost 2 health points...")
-        print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
-        print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
-        time.sleep(2)
-        os.system('cls')
+    #     print("Both of your pokémons feel fatigued. Both lost 2 health points...")
+    #     print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
+    #     print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
+    #     time.sleep(2)
+    #     os.system('cls')
 
 
 

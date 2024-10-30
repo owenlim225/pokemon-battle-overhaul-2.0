@@ -65,7 +65,7 @@ class Gameplay:
             # Execute the battle and apply fatigue adjustments
             self.frontend.pokemon_battle(self.backend.player_1, self.backend.player_2)  # Main battle
             time.sleep(2)
-            self.backend.fatigue_factor(self.backend.player_1, self.backend.player_2)  # Fatigue adjustments
+            self.frontend.fatigue_factor_display(self.backend.player_1, self.backend.player_2)  # Fatigue adjustments
             time.sleep(2)
 
             # ===============================Debugger===============================
