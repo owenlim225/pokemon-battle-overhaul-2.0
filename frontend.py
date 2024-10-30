@@ -35,7 +35,7 @@ class Frontend:
             self.console.print(panel, justify="left")
 
         # Blessing message
-        message = f"[white]      An 👼 blessed your pokemon!\nYour [bold green]{player.current_pokemon[0]}[/bold green] received [/white][bold]{rand_val} blessings![/bold]"
+        message = f"[white]     An 👼 blessed your pokemon!\nYour [bold green]{player.current_pokemon[0]}[/bold green] received [/white][bold]{rand_val} blessings![/bold]"
         print_panel(message, f"{player_name} Blessings!", "yellow")
 
         self.console.print("\n🧙: Would you like to trade your [bold yellow]blessings[/bold yellow] for a [bold purple]random effect?[/bold purple]\n")
@@ -76,7 +76,7 @@ class Frontend:
                 player.current_pokemon[2] = new_power
 
                 # Print the effect panel
-                print_panel(f"{effect_message}\n{power_change_message}", effect_title, "red" if effect == "poison" else "green")
+                print_panel(f"{effect_message}\n{power_change_message}", effect_title, "white")
                 time.sleep(2)
 
                 # Reset the blessing value

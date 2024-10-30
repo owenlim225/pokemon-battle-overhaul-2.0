@@ -80,7 +80,6 @@ class Backend:
             return rand_val  # Return the blessing value to be used in the frontend logic
 
 
-
     #✅ Working
     def player_pokemon_selection(self, player, player_picks):
         # Process player Pokémon selection
@@ -131,26 +130,32 @@ class Backend:
 
     #✅ Working
     def prompt_pokemon_change(self, player, player_name) -> bool:
-        # Prompts the player to change their battle Pokémon. Returns True if changed, False otherwise
-        try:
+        """Prompts the player to change their battle Pokémon. Returns True if changed, False otherwise."""
+        
+        # Check if player has any available Pokémon
+        if player.pokemons.size == 0:
+            print(f"{player_name}, you have no available Pokémon to change.")
+            return False  # No Pokémon available, terminate the function
+
+        while True:  # Loop to ensure valid input
             user_choice = input(f"{player_name}: Would you like to change your battle Pokémon? [Y/N]: ").strip().lower()
-            if user_choice not in ["y", "n"]:
-                raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
 
-            if user_choice == "y":
-                self.change_battle_pokemon(player)
-                return True  # Pokémon was changed
-
-            return False  # Player keeps the same Pokémon
-
-        except ValueError as e:
-            print(f"Error: {e}. Please try again.")
-            return self.prompt_pokemon_change(player, player_name)
-
+            if user_choice in ["y", "n"]:
+                if user_choice == "y":
+                    self.change_battle_pokemon(player)
+                    return True  # Pokémon was changed
+                return False  # Player keeps the same Pokémon
+            else:
+                print("Invalid choice. Please enter 'Y' or 'N'.")  # Handle invalid input
 
     #✅ Working
     def change_battle_pokemon(self, player) -> None:
-        # Allows the player to swap their current battle Pokémon with one from their available Pokémon
+        """Allows the player to swap their current battle Pokémon with one from their available Pokémon."""
+        
+        if player.pokemons.size == 0:
+            print("You have no Pokémon available for battle.")
+            return  # Terminate if no Pokémon are available
+
         try:
             # Display the available Pokémon with their indexes
             print("Available Pokémon:")
