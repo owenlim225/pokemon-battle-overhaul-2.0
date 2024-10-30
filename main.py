@@ -1,14 +1,11 @@
 import time, os, sys
 from backend import Backend
 from frontend import Frontend
-from rich.console import Console
-
 
 class Gameplay:
     def __init__(self, backend: Backend) -> None:
         self.backend = backend  # Use shared backend
         self.frontend = Frontend(backend)  # Pass same backend to frontend
-        self.console = Console()
 
     #✅ Working
     def loading_text(self, text):
@@ -65,7 +62,7 @@ class Gameplay:
             self.backend.pokemon_battle(self.backend.player_1, self.backend.player_2)  # Main battle
             time.sleep(2)
             self.backend.fatigue_factor(self.backend.player_1, self.backend.player_2)  # Fatigue adjustments
-            time.sleep(3)
+            time.sleep(2)
 
             # ===============================Debugger===============================
             # print("debug\nself.backend.player_1.used_pokemons", self.backend.player_1.used_pokemons)

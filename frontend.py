@@ -1,8 +1,7 @@
 #🟧🟧🟧 Not yet tested
 
 import time, os
-from backend import Backend, Player
-
+from backend import Backend
 
 from rich.text import Text
 from rich.console import Console

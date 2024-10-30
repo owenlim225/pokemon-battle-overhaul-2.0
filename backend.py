@@ -1,12 +1,7 @@
 #🟧🟧🟧 Not yet tested
-
 import time, os, random
 import numpy as np
 import pandas as pd
-
-from rich.box import HEAVY
-from rich.table import Table
-from rich.console import Console
 
 class Player:
     def __init__(self) -> None:
@@ -26,9 +21,6 @@ class Player:
 class Backend:
     #✅ Working
     def __init__(self) -> None:
-        self.console = Console()
-
-
         # Players 
         self.player_1 = Player()
         self.player_2 = Player()
@@ -44,11 +36,6 @@ class Backend:
         ])
 
     # =============================🐞 Unit testing===============================
-
-        
-
-
-    
         # self.add_sample_data()
         
     # def add_sample_data(self):
@@ -58,7 +45,6 @@ class Backend:
     #     ]
     #     for row in sample_data:
     #         self.battle_summary.loc[len(self.battle_summary)] = row
-    
     # ======================================================================
 
         self.pokemon_array = np.array([
@@ -79,7 +65,7 @@ class Backend:
     #✅ Working
     def add_battle(self, player1_pokemon, player2_pokemon, winner):
         # print(f"Adding battle: {player1_pokemon[0]} vs {player2_pokemon[0]}, Winner: {winner}")
-        
+
         # Create copies to avoid modifying original data
         player1_data = player1_pokemon.copy()
         player2_data = player2_pokemon.copy()
@@ -99,7 +85,6 @@ class Backend:
         self.battle_count += 1
 
     
-
     #✅ Working
     def prompt_pokemon_change(self, player, player_name) -> bool:
         # Prompts the player to change their battle Pokémon. Returns True if changed, False otherwise
@@ -152,7 +137,7 @@ class Backend:
             print(f"Error: {e}. Please try again.")
 
 
-    #🟧🟧🟧 Not yet tested
+    #✅ Working
     def pokemon_battle(self, player_1, player_2) -> None:
         os.system('cls') #clear terminal 
 
@@ -213,7 +198,6 @@ class Backend:
             self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
 
         
-       
 
     #✅ Working
     def potion_or_poison(self, player) -> None:
@@ -284,6 +268,7 @@ class Backend:
         # print("debug:", player.pokemons)
         #==================================
 
+
     #✅ Working
     def choose_battle_pokemon(self, player) -> None:
         # Process the player's selection of a Pokémon for battle
@@ -311,7 +296,6 @@ class Backend:
             except ValueError as e:
                 print(f"Invalid input. Error: {e}. Please enter a valid number.")
 
-    
 
     #✅ Working
     def fatigue_factor(self, player_1, player_2) -> None:
@@ -325,17 +309,23 @@ class Backend:
         time.sleep(2)
         os.system('cls')
 
-if __name__ == "__main__":
-    backend = Backend()
-    player1_pokemon = ["Pikachu", 35, 55]
-    player2_pokemon = ["Charmander", 39, 52]
-    backend.add_battle(player1_pokemon, player2_pokemon, "player1")
-    backend.add_battle(player1_pokemon, player2_pokemon, "player2")
-    backend.add_battle(player1_pokemon, player2_pokemon, "player3")
-    backend.add_battle(player1_pokemon, player2_pokemon, "player4")
-    backend.add_battle(player1_pokemon, player2_pokemon, "player5")
-    backend.add_battle(player1_pokemon, player2_pokemon, "player6")
-    backend.add_battle(player1_pokemon, player2_pokemon, "player7")
-    backend.add_battle(player1_pokemon, player2_pokemon, "player8")
 
-    print(backend.battle_summary)
+
+
+
+#======================🐞 Debugger ======================
+# if __name__ == "__main__":
+#     backend = Backend()
+#     player1_pokemon = ["Pikachu", 35, 55]
+#     player2_pokemon = ["Charmander", 39, 52]
+#     backend.add_battle(player1_pokemon, player2_pokemon, "player1")
+#     backend.add_battle(player1_pokemon, player2_pokemon, "player2")
+#     backend.add_battle(player1_pokemon, player2_pokemon, "player3")
+#     backend.add_battle(player1_pokemon, player2_pokemon, "player4")
+#     backend.add_battle(player1_pokemon, player2_pokemon, "player5")
+#     backend.add_battle(player1_pokemon, player2_pokemon, "player6")
+#     backend.add_battle(player1_pokemon, player2_pokemon, "player7")
+#     backend.add_battle(player1_pokemon, player2_pokemon, "player8")
+
+#     print(backend.battle_summary)
+#========================================================
