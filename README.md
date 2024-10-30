@@ -1,8 +1,17 @@
-# Pokémon Battle Game
+# Pokemon Battle Game
 
-Welcome to the **Pokémon Battle Game**, an interactive command-line game where players select, battle, and manage Pokémon to compete in thrilling battles! This project consists of three main components: `backend.py`, `frontend.py`, and `main.py`. Each module contributes to creating a seamless gameplay experience, handling player selection, battle logic, and console-based UI using the `rich` library.
+
+Welcome to the **Pokemon Battle Game**, an interactive command-line game where players select, battle, and manage Pokemon to compete in thrilling battles! This project consists of three main components: `backend.py`, `frontend.py`, and `main.py`. Each module contributes to creating a seamless gameplay experience, handling player selection, battle logic, and console-based UI using the `rich` library.
 
 ---
+## Snapshots
+![image](https://github.com/user-attachments/assets/47bbea72-7ad8-4e8a-a0e1-3578ad8f9611)
+![image](https://github.com/user-attachments/assets/c1c612bf-682b-44d0-9504-7d995f23058b)
+![image](https://github.com/user-attachments/assets/402420bc-994d-4c55-9d34-2abc6551bbca)
+![image](https://github.com/user-attachments/assets/0230f2c5-e59f-4320-9c47-dde5c8693cd7)
+![image](https://github.com/user-attachments/assets/c4630c55-e124-4d10-9161-f14309c5a574)
+
+
 
 ## Table of Contents
 
@@ -29,7 +38,6 @@ Clone the repository and install dependencies:
 ```bash
 git clone <your-repository-url>
 cd <your-project-directory>
-pip install -r requirements.txt
 ```
 
 ## How to Run
@@ -50,9 +58,9 @@ python main.py
 ```
 
 ## Gameplay Flow
-- `Player Pokémon Selection`: Players choose their Pokémon from a list.
+- `Player Pokemon Selection`: Players choose their Pokemon from a list.
 
-- `Battle Preparation`: Players are prompted to select Pokémon for each battle.
+- `Battle Preparation`: Players are prompted to select Pokemon for each battle.
 
 - `Battle Execution`: The game processes battle results, applies fatigue, and health changes.
 
@@ -65,15 +73,15 @@ python main.py
 This is the entry point of the game. It initializes the backend and frontend systems and starts the gameplay.
 
 **Key Functions:**
-- `Gameplay.run()`: Main loop handling the flow from Pokémon selection to battles.
+- `Gameplay.run()`: Main loop handling the flow from Pokemon selection to battles.
 - `Gameplay.loading_text()`: Displays loading animations.
 
 ### frontend.py
 Handles all console outputs and user interactions using the rich library.
 
 **Key Features:**
-- `display_pokemon_array()`: Shows available Pokémon with stats in a styled table.
-- `player_pokemon_selection()`: Collects player input for Pokémon selection.
+- `display_pokemon_array()`: Shows available Pokemon with stats in a styled table.
+- `player_pokemon_selection()`: Collects player input for Pokemon selection.
 - `pokemon_battle()`: Displays battle results and logs them.
 - `potion_or_poison_display()`: Handles potion or poison events with blessings.
 - `end_game()`: Displays the battle summary and concludes the game.
@@ -82,16 +90,16 @@ Handles all console outputs and user interactions using the rich library.
 Manages game logic, player data, and battle summaries.
 
 **Key Components:**
-- `Player Class`: Stores each player’s Pokémon and battle state.
+- `Player Class`: Stores each player’s Pokemon and battle state.
 - `Backend Class`:
-    - Handles Pokémon selection and battle logic.
+    - Handles Pokemon selection and battle logic.
     - Manages health, fatigue, and random events.
     - Logs each battle in a DataFrame for summary at the end.
 
 ## Features
-- `Dynamic Pokémon Selection`: Choose from a variety of Pokémon with unique stats.
-- `Battle System`: Compare Pokémon power to determine winners.
-- `Health and Fatigue Management`: Players' Pokémon lose health over time.
+- `Dynamic Pokemon Selection`: Choose from a variety of Pokemon with unique stats.
+- `Battle System`: Compare Pokemon power to determine winners.
+- `Health and Fatigue Management`: Players' Pokemon lose health over time.
 - `Potion/Poison Events`: Random blessings with risks of negative effects.
 - `Battle Summary`: View a detailed summary at the end of the game.
 - `Console UI with Rich`: Beautifully formatted tables, panels, and text.
