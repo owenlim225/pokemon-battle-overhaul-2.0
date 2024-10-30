@@ -1,3 +1,4 @@
+#🟧🟧🟧 Not yet tested
 import time, os, sys
 from backend import Backend
 from frontend import Frontend
@@ -16,7 +17,7 @@ class Gameplay:
             time.sleep(1)
         time.sleep(1)
         os.system('cls')  # Final cle
-        
+
     #✅ Working
     def run(self) -> None:
         _in_battle = True
@@ -30,7 +31,8 @@ class Gameplay:
         #✅ Working
         # Main game loop
         while _in_battle:
-            self.loading_text("Preparing battle")
+            if self.backend.battle_count:
+                self.loading_text("Preparing next battle")
 
             #✅ Working
             if not self.backend.battle_count:
@@ -38,11 +40,9 @@ class Gameplay:
                 self.frontend.choose_battle_pokemon(self.backend.player_2, "Player 2")
             else:
                 #✅ Working
-                # Players choose their battle Pokémon
-                if not self.backend.prompt_pokemon_change(self.backend.player_1, "Player 1"):
-                    print("Player 1 keeps the same Pokémon.")
-                if not self.backend.prompt_pokemon_change(self.backend.player_2, "Player 2"):
-                    print("Player 2 keeps the same Pokémon.")
+                self.frontend.pokemon_change_prompt() # Players choose their battle Pokémon
+                time.sleep(2)
+
 
 
             self.loading_text("Preparing")
@@ -55,7 +55,7 @@ class Gameplay:
 
 
             # Start of battle
-            self.loading_text(f"Preparing battle {self.backend.battle_count}")
+            self.loading_text(f"Preparing battle No.{self.backend.battle_count}")
 
 
             #✅ Working

@@ -9,10 +9,10 @@ class Player:
         # Array to store Pokemon: (name, power) tuples
         self.pokemons = np.empty((0, 2), dtype=object)
 
-        # Current Pokémon in battle, initially None
+        # Current Pokemon in battle, initially None
         self.current_pokemon = None
 
-        # Array to track used Pokémon
+        # Array to track used Pokemon
         self.used_pokemons = 0
         
         # Number of wins
@@ -66,7 +66,7 @@ class Backend:
 
     #✅ Working
     def potion_or_poison_calculation(self, player):
-            """Calculates the effect of potion or poison on the player's current Pokémon."""
+            # Calculates the effect of potion or poison on the player's current Pokemon 
             # Generate blessing value if needed
             if player.current_pokemon.shape[0] <= 3 or int(player.current_pokemon[3]) == 0:
                 rand_val = random.randint(10, 15)
@@ -82,17 +82,17 @@ class Backend:
 
     #✅ Working
     def player_pokemon_selection(self, player, player_picks):
-        # Process player Pokémon selection
-        # Extract selected Pokémon based on player picks
+        # Process player Pokemon selection
+        # Extract selected Pokemon based on player picks
         selected_pokemon = self.pokemon_array[np.array(player_picks), :]
 
-        # Add selected Pokémon to the player's collection
+        # Add selected Pokemon to the player's collection
         if player.pokemons.size == 0:
             player.pokemons = selected_pokemon  # Assign directly if empty
         else:
             player.pokemons = np.vstack((player.pokemons, selected_pokemon))
 
-        # Remove the selected Pokémon from the original array
+        # Remove the selected Pokemon from the original array
         self.pokemon_array = np.delete(self.pokemon_array, player_picks, axis=0)
         
         #🐞 Debugger ======================
@@ -102,88 +102,31 @@ class Backend:
 
     #✅ Working
     def choose_battle_pokemon(self, player) -> None:
-        # Process the player's selection of a Pokémon for battle
+        # Process the player's selection of a Pokemon for battle
         if player.pokemons.size == 0:
-            print("You have no available Pokémon to select.")
-            return  # Exit if no Pokémon are available
+            print("You have no available Pokemon to select.")
+            return  # Exit if no Pokemon are available
 
-        # Get the player's selected Pokémon index
+        # Get the player's selected Pokemon index
         while True:
             try:
-                battle_pick = int(input("Please select your battle Pokémon (index): "))
+                battle_pick = int(input("Please select your battle Pokemon (index): "))
 
                 # Validate the input index
                 if battle_pick < 0 or battle_pick >= len(player.pokemons):
-                    print("Invalid selection. Please pick one of your available Pokémon.")
+                    print("Invalid selection. Please pick one of your available Pokemon.")
                     continue
 
-                # Assign the selected Pokémon to the player's current Pokémon
+                # Assign the selected Pokemon to the player's current Pokemon
                 player.current_pokemon = player.pokemons[battle_pick]
 
-                # Remove the selected Pokémon from the player's available Pokémon
+                # Remove the selected Pokemon from the player's available Pokemon
                 player.pokemons = np.delete(player.pokemons, battle_pick, axis=0)
                 break  # Exit loop on successful selection
 
             except ValueError as e:
                 print(f"Invalid input. Error: {e}. Please enter a valid number.")
 
-
-    #✅ Working
-    def prompt_pokemon_change(self, player, player_name) -> bool:
-        """Prompts the player to change their battle Pokémon. Returns True if changed, False otherwise."""
-        
-        # Check if player has any available Pokémon
-        if player.pokemons.size == 0:
-            print(f"{player_name}, you have no available Pokémon to change.")
-            return False  # No Pokémon available, terminate the function
-
-        while True:  # Loop to ensure valid input
-            user_choice = input(f"{player_name}: Would you like to change your battle Pokémon? [Y/N]: ").strip().lower()
-
-            if user_choice in ["y", "n"]:
-                if user_choice == "y":
-                    self.change_battle_pokemon(player)
-                    return True  # Pokémon was changed
-                return False  # Player keeps the same Pokémon
-            else:
-                print("Invalid choice. Please enter 'Y' or 'N'.")  # Handle invalid input
-
-    #✅ Working
-    def change_battle_pokemon(self, player) -> None:
-        """Allows the player to swap their current battle Pokémon with one from their available Pokémon."""
-        
-        if player.pokemons.size == 0:
-            print("You have no Pokémon available for battle.")
-            return  # Terminate if no Pokémon are available
-
-        try:
-            # Display the available Pokémon with their indexes
-            print("Available Pokémon:")
-            for i, pokemon in enumerate(player.pokemons):
-                print(f"{i}: {pokemon[0]} (Health: {pokemon[1]}, Power: {pokemon[2]})")
-
-            # Ask the user to select the index of the Pokémon to swap
-            index = int(input("Select your new battle Pokémon: "))
-
-            # Validate the input index
-            if index < 0 or index >= len(player.pokemons):
-                raise ValueError("Invalid index. Please select a valid Pokémon.")
-
-            # If there's already a Pokémon in `current_pokemon`, add it back to the list
-            if player.current_pokemon is not None and player.current_pokemon.size > 0:
-                player.pokemons = np.vstack([player.pokemons, player.current_pokemon])
-
-            # Update `current_pokemon` with the selected Pokémon
-            player.current_pokemon = player.pokemons[index]
-
-            # Remove the selected Pokémon from `pokemons`
-            player.pokemons = np.delete(player.pokemons, index, axis=0)
-
-            print(f"\n{player.current_pokemon[0]} is now ready for battle!\n")
-            player.used_pokemons += 1
-
-        except ValueError as e:
-            print(f"Error: {e}. Please try again.")
 
 
     #✅ Working
@@ -201,15 +144,15 @@ class Backend:
             winner = "player 1"
 
             # Adjust health
-            player_1_health_adjustment = int(player_1.current_pokemon[1]) + 5  # Increase health of winning Pokémon
-            player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 10)  # Decrease health of losing Pokémon
+            player_1_health_adjustment = int(player_1.current_pokemon[1]) + 5  # Increase health of winning Pokemon
+            player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 10)  # Decrease health of losing Pokemon
 
             print("Health")
             print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
             print(f"{player_2.current_pokemon[0]}: {player_2.current_pokemon[1]} -> {player_2_health_adjustment}")
 
             # Adjust health permanently (in-place)
-            player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5  # Increase health of the winning Pokémon
+            player_1.current_pokemon[1] = int(player_1.current_pokemon[1]) + 5  # Increase health of the winning Pokemon
             player_2.current_pokemon[1] = max(0, int(player_2.current_pokemon[1]) - 10)
             
             # Add battle to pd frame
@@ -223,8 +166,8 @@ class Backend:
             winner = "player 2"
 
             # Adjust health
-            player_1_health_adjustment =  max(0, int(player_1.current_pokemon[1]) - 10)  # Decrease health of losing Pokémon
-            player_2_health_adjustment = int(player_2.current_pokemon[1]) + 5  # Increase health of winning Pokémon
+            player_1_health_adjustment =  max(0, int(player_1.current_pokemon[1]) - 10)  # Decrease health of losing Pokemon
+            player_2_health_adjustment = int(player_2.current_pokemon[1]) + 5  # Increase health of winning Pokemon
 
             print("Health")
             print(f"{player_1.current_pokemon[0]}: {player_1.current_pokemon[1]} -> {player_1_health_adjustment}")
@@ -232,7 +175,7 @@ class Backend:
             
             # Adjust health permanently (in-place)
             player_1.current_pokemon[1] = max(0, int(player_1.current_pokemon[1]) - 10)
-            player_2.current_pokemon[1] = int(player_2.current_pokemon[1]) + 5  # Increase health of the winning Pokémon
+            player_2.current_pokemon[1] = int(player_2.current_pokemon[1]) + 5  # Increase health of the winning Pokemon
             
             # Add battle to pd frame
             self.add_battle(player_1.current_pokemon, player_2.current_pokemon, winner)
@@ -272,7 +215,7 @@ class Backend:
 
     #✅ Working
     def fatigue_factor(self, player_1, player_2) -> None:
-        # Decrease health of both current Pokémon by 2
+        # Decrease health of both current Pokemon by 2
         player_1_health_adjustment = max(0, int(player_1.current_pokemon[1]) - 2)
         player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 2)
 
