@@ -15,6 +15,37 @@ class Frontend:
         self.backend = backend  # Use shared backend
         self.console = Console()
 
+    #🟧🟧🟧 Not yet tested
+    def check_all_pokemons_used(self):
+        # Checks if all Pokémon have been used and prompts the user to continue or end the battle.
+        if (
+            self.backend.player_1.used_pokemons == len(self.backend.player_1.pokemons)
+            and self.backend.player_2.used_pokemons == len(self.backend.player_2.pokemons)
+        ):
+            try:
+                end_message = Text("All pokémons were used in the battle.\n", style="blue")
+                self.console.print(end_message)
+
+                user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
+
+                if user_choice not in ["y", "n"]:
+                    raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
+
+                return user_choice == "y"  # Returns True if 'Y', False if 'N'
+            
+            except ValueError as e:
+                self.console.print(f"[bold red]Error: {e}. Please Try again.[/bold red]")
+                return self.check_all_pokemons_used()  # Retry on error
+        else:
+            return True  # Continue if not all Pokémon are used
+
+
+
+
+
+
+
+
     #✅ Working
     def display_battle_summary(self, battle_summary):
         # Create a rich table with a heavy border

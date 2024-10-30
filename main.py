@@ -1,5 +1,5 @@
 import time, os, sys
-from backend import Backend, Player
+from backend import Backend
 from frontend import Frontend
 from rich.console import Console
 
@@ -55,6 +55,7 @@ class Gameplay:
             self.backend.potion_or_poison(self.backend.player_1)
             self.backend.potion_or_poison(self.backend.player_2)
 
+
             # Start of battle
             self.loading_text(f"Preparing battle {self.backend.battle_count}")
 
@@ -73,26 +74,11 @@ class Gameplay:
             # print("len(self.backend.player_2.pokemons)", len(self.backend.player_2.pokemons))
             # ======================================================================
 
-            #✅ Working
-            # Check if all Pokémon have been used 
-            if self.backend.player_1.used_pokemons == len(self.backend.player_1.pokemons) and \
-               self.backend.player_2.used_pokemons == len(self.backend.player_2.pokemons):
-                try:
-                    print("All pokemons were used in the battle.\n")
-                    user_choice = input("Would you like to continue the battle? [Y/N]: ").strip().lower()
-                    if user_choice not in ["y", "n"]:
-                        raise ValueError("Invalid choice. Please enter 'Y' or 'N'.")
-                        
-                    if user_choice == "n": 
-                        break
-                    else:
-                        continue
-
-                except ValueError as e:
-                    print(f"Error: {e}. Please try again.")
-            else:
-                continue
+            # Check if all Pokémon have been used
+            if not self.frontend.check_all_pokemons_used():
+                _in_battle = False  # Break out of the loop if the user chooses 'N'
                     
+
         #✅ Working
         self.frontend.end_game() # End the game
 
