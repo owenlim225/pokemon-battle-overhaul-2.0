@@ -1,6 +1,6 @@
 #🟧🟧🟧 Not yet tested
 
-import time, os, random
+import time, os, sys, random
 from backend import Backend
 import numpy as np
 
@@ -78,6 +78,48 @@ class Frontend:
             self.console.print(panel, justify="left")
 
 
+    ##✅ Working
+    def intro(self):
+
+        message = """
+                Welcome to [bold #FFD700]⚔️ Pokemon Battle! ⚔️[/bold #FFD700]
+
+\t\t[bold italic blue]BE THE BEST POKEMASTER IN THE WORLD[/bold italic blue]
+
+[yellow]🛈[/yellow]: After each selection, 👼 blesses your [green]pokemon[/green] with a [bold yellow]random value[/bold yellow].
+
+[yellow]🛈[/yellow]: 🧙 can exchange your [bold yellow]✨blessing✨[/bold yellow] for a [purple]random effect[/purple].
+[yellow]🛈[/yellow]: [purple]random effect[/purple] could be [bold green]💚 potion[/bold green] or [bold red]💔 poison[/bold red].
+
+\t\t🏆 Winner: [green]+5 Health💚, +5 Power[/green]
+\t\t🔥 Loser: [red]-10 Health💔, +3 Power[/red]     
+
+
+[yellow]🛈[/yellow]: [italic]After every battle, ⚔️ pokemon lose [bold red]-2 Health💔[/bold red] due to [red]fatigue[/red][/italic].
+
+[yellow]🛈[/yellow]: To finish the battle, both players must use all their pokemons.
+
+
+
+    \t\t     [bold green]PRESS ENTER TO START[/bold green] or [bold red]type 'q' to quit[/bold red]
+        """
+
+        # Print the panel with centered alignment
+        self.console.print(Panel(Align.center(message, vertical="middle"), style="white", border_style="yellow", box=HEAVY))
+        
+        # Wait for user input to continue or quit
+        self.wait_for_start()
+
+    #✅ Working
+    def wait_for_start(self):
+        user_input = input().strip().lower()
+
+        if user_input == 'q':
+            self.console.print("[bold red]Game exited. Goodbye![/bold red]", style="white")
+            sys.exit()  # Quit the program
+        else:
+            self.console.print("[bold green]Game starting...[/bold green]", style="white")
+
 # =========================================================================================
 
 
@@ -86,20 +128,20 @@ class Frontend:
     def display_battle_results(self, player_1, player_2, battle_data) -> None:
         def print_winner(winner_message, border_style):
             # Helper function to print winner announcement and health update
-            self.console.print(Panel(Align.center(winner_message), title="🏆🏆🏆", border_style=border_style))
+            self.console.print(Panel(Align.center(winner_message), border_style=border_style))
             time.sleep(5)
             os.system('cls')
 
             self.console.print(Align.center("Health Update"))
             self.print_dual_panel(
-                f"[bold green]{player_1.current_pokemon[0]}:[/bold green] [bold white]{battle_data['player_1_original_health']}[/bold white] -> [bold red]{player_1.current_pokemon[1]}[/bold red]",
+                f"[bold blue]{player_1.current_pokemon[0]}:[/bold blue] [bold white]{battle_data['player_1_original_health']}[/bold white] -> [bold red]{player_1.current_pokemon[1]}[/bold red]",
                 player_1_emoji, "blue",
-                f"[bold green]{player_2.current_pokemon[0]}:[/bold green] [bold white]{battle_data['player_2_original_health']}[/bold white] -> [bold green]{player_2.current_pokemon[1]}[/bold green]",
+                f"[bold red]{player_2.current_pokemon[0]}:[/bold red] [bold white]{battle_data['player_2_original_health']}[/bold white] -> [bold green]{player_2.current_pokemon[1]}[/bold green]",
                 player_2_emoji, "red"
             )
 
         # Start battle message
-        self.console.print(Align.center("[bold yellow]Battle start![/bold yellow]", vertical="middle"))
+        self.console.print(Align.center(f"[bold yellow]Battle {self.backend.battle_count}![/bold yellow]", vertical="middle"))
 
         # Display Pokemon information using dual panels
         self.print_dual_panel(
@@ -138,6 +180,7 @@ class Frontend:
 
         # Print winner message and health updates
         print_winner(winner_message, "yellow")
+        self.backend.battle_count += 1
         time.sleep(4)
         
 
@@ -148,8 +191,8 @@ class Frontend:
         player_2_health_adjustment = max(0, int(player_2.current_pokemon[1]) - 2)
 
         # Message and style configuration for both players
-        player1_message = f"[bold green]{player_1.current_pokemon[0]}:[/bold green] [bold white]{player_1.current_pokemon[1]}[/bold white] -> [bold red]{player_1_health_adjustment}[/bold red]"
-        player2_message = f"[bold green]{player_2.current_pokemon[0]}:[/bold green] [bold white]{player_2.current_pokemon[1]}[/bold white] -> [bold red]{player_2_health_adjustment}[/bold red]"
+        player1_message = f"[bold blue]{player_1.current_pokemon[0]}:[/bold blue] [bold white]{player_1.current_pokemon[1]}[/bold white] -> [bold red]{player_1_health_adjustment}[/bold red]"
+        player2_message = f"[bold red]{player_2.current_pokemon[0]}:[/bold red] [bold white]{player_2.current_pokemon[1]}[/bold white] -> [bold red]{player_2_health_adjustment}[/bold red]"
         player1_title = "[bold]Player 1[/bold]"
         player2_title = "[bold]Player 2[/bold]"
         player1_style = "blue"
@@ -567,7 +610,10 @@ class Frontend:
 
 # Debugging
 # if __name__ == "__main__":
-#     f = Frontend()
+#     backend_instance = Backend()    
+#     f = Frontend(backend_instance) 
+#     f.intro()
+
 #     f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 1")
 #     f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 2")
 #     f.backend.add_battle(["Pikachu", 100, 50], ["Charizard", 120, 60], "Player 3")
@@ -575,3 +621,4 @@ class Frontend:
     
 #     f.end_game()
 
+    
