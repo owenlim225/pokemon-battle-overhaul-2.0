@@ -5,10 +5,12 @@ Welcome to the **Pokemon Battle Game**, an interactive command-line game where p
 
 ---
 ## Snapshots
-![image](https://github.com/user-attachments/assets/47bbea72-7ad8-4e8a-a0e1-3578ad8f9611)
+![image](https://github.com/user-attachments/assets/8bdb2fb4-0ef6-4c22-8c5f-af26640ab8da)
+
 ![image](https://github.com/user-attachments/assets/402420bc-994d-4c55-9d34-2abc6551bbca)
 ![image](https://github.com/user-attachments/assets/0cd4632d-b0e7-4f5b-86ce-139f1b6b0cd9)
-![image](https://github.com/user-attachments/assets/c4630c55-e124-4d10-9161-f14309c5a574)
+![image](https://github.com/user-attachments/assets/28abaa11-aa19-46a5-8a78-de1c0eb29286)
+
 
 
 
@@ -53,7 +55,8 @@ python main.py
 ├── main.py          # Entry point of the game
 ├── backend.py       # Backend logic including player data and battle handling
 ├── frontend.py      # Console interface using rich library
-└── requirements.txt # Python dependencies
+├── pkg_handler.py      # instally install dependencies when main run
+
 ```
 
 ## Gameplay Flow
