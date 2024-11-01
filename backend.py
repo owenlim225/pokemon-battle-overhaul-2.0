@@ -63,6 +63,19 @@ class Backend:
                 ["Squirtle",    105,      85,        0]
         ])  
 
+    #🟧🟧🟧 Not yet tested
+    def get_overall_winner(self):
+        # Count the number of wins for Player 1 and Player 2
+        player_1_wins = self.player_1.wins
+        player_2_wins = self.player_2.wins
+
+        # Determine the overall winner
+        if player_1_wins > player_2_wins:
+            return "Player 1"
+        elif player_2_wins > player_1_wins:
+            return "Player 2"
+        else:
+            return "It's a tie!"
 
     #✅ Working
     def player_pokemon_selection(self, player, player_picks):
