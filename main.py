@@ -1,8 +1,8 @@
 #🟧🟧🟧 Not yet tested
 
-# Module installer
-import pkg_handler
-pkg_handler.initialize_packages()
+# # Module installer
+# import pkg_handler
+# pkg_handler.initialize_packages()
 
 
 import time, os, sys
@@ -30,7 +30,6 @@ class Gameplay:
     #✅ Working
     def run(self) -> None:
         _in_battle = True
-        
         self.frontend.intro()
 
         # Player Pokémon selection
@@ -39,57 +38,47 @@ class Gameplay:
 
         self.loading_text("Preparing pokemon")
 
-        #✅ Working
+
         # Main game loop
         while _in_battle:
             if self.backend.battle_count:
                 self.loading_text("Preparing next battle")
 
-            #✅ Working
             if not self.backend.battle_count:
                 self.frontend.choose_battle_pokemon(self.backend.player_1, "Player 1")
                 self.frontend.choose_battle_pokemon(self.backend.player_2, "Player 2")
             else:
-                #✅ Working
-                self.frontend.pokemon_change_prompt() # Players choose their battle Pokémon
+                self.frontend.pokemon_change_prompt()  # Players choose their battle Pokémon
                 time.sleep(2)
-
-
 
             self.loading_text("Preparing")
 
-            #✅ Working
             # Apply potion or poison effects with frontend display and backend logic
             self.frontend.potion_or_poison_display(self.backend.player_1, "Player 1", self.backend)
             self.frontend.potion_or_poison_display(self.backend.player_2, "Player 2", self.backend)
 
-
-
             # Start of battle
             self.loading_text(f"Preparing battle No.{self.backend.battle_count}")
 
-
-            #✅ Working
             # Execute the battle and apply fatigue adjustments
             self.frontend.pokemon_battle(self.backend.player_1, self.backend.player_2)  # Main battle
             time.sleep(2)
             self.frontend.fatigue_factor_display(self.backend.player_1, self.backend.player_2)  # Fatigue adjustments
             time.sleep(2)
 
-            # ===============================Debugger===============================
-            # print("debug\nself.backend.player_1.used_pokemons", self.backend.player_1.used_pokemons)
-            # print("len(self.backend.player_1.pokemons)", len(self.backend.player_1.pokemons))
-            # print("self.backend.player_2.used_pokemons", self.backend.player_2.used_pokemons)
-            # print("len(self.backend.player_2.pokemons)", len(self.backend.player_2.pokemons))
-            # ======================================================================
+            
 
             # Check if all Pokémon have been used
             if not self.frontend.check_all_pokemons_used():
                 _in_battle = False  # Break out of the loop if the user chooses 'N'
-                    
+            else:
+                # Activate `check_all_pokemons_used` every 3rd battle after all Pokémon are used
+                if self.backend.battle_count >= 3 and self.backend.battle_count % 3 == 0:
+                    if not self.frontend.check_all_pokemons_used():
+                        _in_battle = False
 
-        #✅ Working
-        self.frontend.end_game() # End the game
+        self.frontend.end_game(self.backend.player_1, self.backend.player_2)  # End the game
+
 
 
 

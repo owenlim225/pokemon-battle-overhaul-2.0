@@ -80,33 +80,23 @@ class Frontend:
 
     ##✅ Working
     def intro(self):
+        os.system('cls')
 
-        message = """
-                Welcome to [bold #FFD700]⚔️ Pokemon Battle! ⚔️[/bold #FFD700]
-
-\t\t[bold italic blue]BE THE BEST POKEMASTER IN THE WORLD[/bold italic blue]
-
-[yellow]🛈[/yellow]: After each selection, 👼 blesses your [green]pokemon[/green] with a [bold yellow]random value[/bold yellow].
-
-[yellow]🛈[/yellow]: 🧙 can exchange your [bold yellow]✨blessing✨[/bold yellow] for a [purple]random effect[/purple].
-[yellow]🛈[/yellow]: [purple]random effect[/purple] could be [bold green]💚 potion[/bold green] or [bold red]💔 poison[/bold red].
-
-\t\t🏆 Winner: [green]+5 Health💚, +5 Power[/green]
-\t\t🔥 Loser: [red]-10 Health💔, +3 Power[/red]     
-
-
-[yellow]🛈[/yellow]: [italic]After every battle, ⚔️ pokemon lose [bold red]-2 Health💔[/bold red] due to [red]fatigue[/red][/italic].
-
-[yellow]🛈[/yellow]: To finish the battle, both players must use all their pokemons.
-
-
-
-    \t\t     [bold green]PRESS ENTER TO START[/bold green] or [bold red]type 'q' to quit[/bold red]
-        """
+        message = "🏆 Winner: [green]+5 Health💚, +5 Power[/green]\n🔥 Loser: [red]-10 Health💔, +3 Power[/red]"
 
         # Print the panel with centered alignment
-        self.console.print(Panel(Align.center(message, vertical="middle"), style="white", border_style="yellow", box=HEAVY))
+        self.console.print(Panel(Align.center("[bold blue]Pokemon Battle![/bold blue]", vertical="middle"), style="white", border_style="blue", box=HEAVY))
+        self.console.print(Align.center("By: Sherwin P.Limosnero\n\n", vertical="middle"), style="white")
         
+
+        self.console.print(Align.center("[yellow]🛈[/yellow]: After each selection, 👼 blesses your [green]pokemon[/green] with a [bold yellow]random value[/bold yellow].", vertical="middle"), style="white")
+        self.console.print(Align.center("[yellow]🛈[/yellow]: 🧙 can exchange your [bold yellow]✨blessing✨[/bold yellow] for a [purple]random effect[/purple].", vertical="middle"), style="white")
+        self.console.print(Align.center("[yellow]🛈[/yellow]: [purple]random effect[/purple] could be [bold green]💚 potion[/bold green] or [bold red]💔 poison[/bold red].", vertical="middle"), style="white")
+        self.console.print(Align.center("[yellow]🛈[/yellow]: [italic]After every battle, ⚔️ pokemon lose [bold red]-2 Health💔[/bold red] due to [red]fatigue[/red][/italic].", vertical="middle"), style="white")
+        self.console.print(Align.center("[yellow]🛈[/yellow]: To finish the battle, both players must use all their pokemons.", vertical="middle"), style="white")
+        self.console.print(Align.center(message, vertical="middle"), style="white")
+        
+        self.console.print(Panel(Align.center("[bold green]PRESS ENTER TO START[/bold green] or [bold red]type 'q' to quit[/bold red]", vertical="middle"), style="white", border_style="yellow", box=HEAVY))
         # Wait for user input to continue or quit
         self.wait_for_start()
 
@@ -129,16 +119,18 @@ class Frontend:
         def print_winner(winner_message, border_style):
             # Helper function to print winner announcement and health update
             self.console.print(Panel(Align.center(winner_message), border_style=border_style))
-            time.sleep(5)
+            time.sleep(3)
             os.system('cls')
 
-            self.console.print(Align.center("Health Update"))
+            self.console.print(Align.center("\n[bold green]Health Update[/bold green]\n"))
             self.print_dual_panel(
-                f"[bold blue]{player_1.current_pokemon[0]}:[/bold blue] [bold white]{battle_data['player_1_original_health']}[/bold white] -> [bold red]{player_1.current_pokemon[1]}[/bold red]",
-                player_1_emoji, "blue",
-                f"[bold red]{player_2.current_pokemon[0]}:[/bold red] [bold white]{battle_data['player_2_original_health']}[/bold white] -> [bold green]{player_2.current_pokemon[1]}[/bold green]",
-                player_2_emoji, "red"
-            )
+            f"[bold blue]{player_1.current_pokemon[0]}:[/bold blue] [bold white]{battle_data['player_1_original_health']}[/bold white] -> "
+            f"[{'bold green' if battle_data['winner'] == 'player 1' else 'bold red'}]{player_1.current_pokemon[1]}[/{'bold green' if battle_data['winner'] == 'player 1' else 'bold red'}]",
+            player_1_emoji, "blue",
+            f"[bold red]{player_2.current_pokemon[0]}:[/bold red] [bold white]{battle_data['player_2_original_health']}[/bold white] -> "
+            f"[{'bold green' if battle_data['winner'] == 'player 2' else 'bold red'}]{player_2.current_pokemon[1]}[/{'bold green' if battle_data['winner'] == 'player 2' else 'bold red'}]",
+            player_2_emoji, "red"
+        )
 
         # Start battle message
         self.console.print(Align.center(f"[bold yellow]Battle {self.backend.battle_count}![/bold yellow]", vertical="middle"))
@@ -176,11 +168,10 @@ class Frontend:
             )
             winner_message = "🔥[bold yellow]It's a draw![/bold yellow]🔥"
             player_1_emoji = player_2_emoji = "🔥"
-        time.sleep(4)
+        time.sleep(3)
 
         # Print winner message and health updates
         print_winner(winner_message, "yellow")
-        self.backend.battle_count += 1
         time.sleep(4)
         
 
@@ -386,16 +377,20 @@ class Frontend:
             table.add_row(*[str(item) for item in row])
 
         # Print the table using rich
-        self.console.print(table)
+        self.console.print(Align.center(table), style="white")
 
 
     # ✅ Working
-    def end_game(self) -> None:
+    def end_game(self, player_1, player_2) -> None:
         os.system('cls')
 
-        # Display game end message with green text
-        end_message = Text("\t\t\t\t      Battle Summary\n", style="red")
-        self.console.print(end_message)
+        # Print the panel with centered alignment
+        self.console.print(Panel(Align.center("Battle Summary", vertical="middle"), style="white", border_style="yellow", box=HEAVY))
+        
+        self.print_dual_panel(
+            f"Win: {player_1.wins}", "[bold]Player 1[/bold]", "blue",
+            f"Win: {player_2.wins}", "[bold]Player 2[/bold]", "red"
+        )
 
         # Fetch the latest battle summary and display it
         battle_summary = self.backend.battle_summary
@@ -404,9 +399,14 @@ class Frontend:
         else:
             self.display_battle_summary(battle_summary)
 
+        # Overall champion
+        overall_champion = self.backend.get_overall_winner()
+        self.console.print(Panel(Align.center(f"[bold]  champion[/bold]:\n[bold yellow]🏆{overall_champion}🏆[/bold yellow]", vertical="middle"), style="white", border_style="yellow", box=HEAVY))
+        
+
         # Print a thank-you message in green
-        thank_you_message = Text("\n\n\t\t\t\tThank you for playing!\n\n\n\n", style="green")
-        self.console.print(thank_you_message)
+        self.console.print(Align.center("\n\nThank you for playing!\n\n", vertical="middle"), style="green")
+
 
         time.sleep(10)
         os._exit(0)
