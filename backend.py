@@ -1,5 +1,5 @@
 #🟧🟧🟧 Not yet tested
-import time, os, random
+import random
 import numpy as np
 import pandas as pd
 
@@ -63,7 +63,7 @@ class Backend:
                 ["Squirtle",    105,      85,        0]
         ])  
 
-    #🟧🟧🟧 Not yet tested
+    #✅ Working
     def get_overall_winner(self):
         # Count the number of wins for Player 1 and Player 2
         player_1_wins = self.player_1.wins
