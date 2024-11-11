@@ -312,6 +312,7 @@ class Frontend:
     def display_pokemon_array(self):
         # Display the Pokemon array from backend using a rich table
         # Create a rich table with a heavy border
+        self.console.print("\n    [green]Choose from [bold]1 to 4 pokemons![/bold][/green] \n\n        Selected pokemons will be \n  [red]removed from the pokemon list array![/red]\n\n")
         table = Table(border_style="bold white", box=HEAVY, title="Available Pokemon")
 
         # Add columns for the Pokemon attributes
@@ -330,7 +331,7 @@ class Frontend:
             )
 
         # Print the table center-aligned
-        self.console.print(Align.center(table))
+        self.console.print(Align.left(table))
 
 
     #✅ Working
